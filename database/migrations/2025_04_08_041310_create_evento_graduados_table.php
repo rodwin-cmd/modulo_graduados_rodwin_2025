@@ -15,10 +15,17 @@ return new class extends Migration
 
         Schema::create('evento_graduados', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('evento_contacto_id')->constrained();
-            $table->foreignId('graduado_id')->constrained();
-            $table->foreignId('evento_contacto_graduado_id');
+            $table->unsignedBigInteger('evento_id');
+            $table->unsignedBigInteger('graduado_id');
+            $table->string('nombre_evento');
+            $table->string('lugar del evento');
+            $table->date('fecha_evento');
+            $table->text('descripcion_evento')->nullable();
+            $table->boolean('asistio');
             $table->timestamps();
+
+            $table->foreign('evento_id')->references('id')->on('eventos_contacto');
+            $table->foreign('graduado_id')->references('id')->on('graduados');
         });
 
         Schema::enableForeignKeyConstraints();

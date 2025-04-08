@@ -10,11 +10,14 @@ class EventoGraduado extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'id' => 'integer',
-        'evento_contacto_id' => 'integer',
-        'graduado_id' => 'integer',
-        'evento_contacto_graduado_id' => 'integer',
+    protected $fillable = [
+        'evento_id',
+        'graduado_id',
+        'nombre_evento',
+        'lugar_evento',
+        'fecha_evento',
+        'descripcion_evento',
+        'asistio',
     ];
 
     public function eventoContactoGraduado(): BelongsTo
