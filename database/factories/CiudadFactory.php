@@ -2,29 +2,16 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use App\Models\Ciudad;
 use App\Models\Departamento;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CiudadFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Ciudad::class;
-
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
         return [
-            'id_ciudad' => fake()->word(),
-            'nombre' => fake()->word(),
-            'departamento_id' => Departamento::factory(),
+            'nombre' => $this->faker->city,
+            'departamento_id' => Departamento::inRandomOrder()->first()?->id ?? 1, // Asegúrate de tener departamentos
         ];
     }
 }

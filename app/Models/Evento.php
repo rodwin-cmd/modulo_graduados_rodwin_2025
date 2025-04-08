@@ -12,11 +12,15 @@ class Evento extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'graduado_id' => 'integer',
+        'nombre_evento' => 'string',
+        'descripcion' => 'string',
+        'ciudad_evento' => 'string',
+        'lugar_evento' => 'string',
+        'fecha_evento' => 'date',
     ];
 
     public function graduado(): BelongsTo
     {
-        return $this->belongsTo(Graduado::class);
+        return $this->belongsTo(Graduado::class, 'graduado_numero_documento', 'numero_documento');
     }
 }

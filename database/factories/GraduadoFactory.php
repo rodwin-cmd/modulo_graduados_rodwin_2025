@@ -2,39 +2,27 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Ciudad;
-use App\Models\Graduado;
 use App\Models\ProgramaAcademico;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GraduadoFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Graduado::class;
-
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
         return [
-            'nombre' => fake()->word(),
-            'apellidos' => fake()->word(),
-            'tipo_documento' => fake()->word(),
-            'numero_documento' => fake()->randomNumber(),
-            'sexo' => fake()->word(),
-            'fecha_nacimiento' => fake()->date(),
-            'correo_personal' => fake()->word(),
-            'correo_institucional' => fake()->word(),
-            'telefono' => fake()->word(),
-            'direccion' => fake()->word(),
-            'ciudad_id' => Ciudad::factory(),
-            'programa_academico_id' => ProgramaAcademico::factory(),
+            'nombre' => $this->faker->firstName,
+            'apellidos' => $this->faker->lastName,
+            'tipo_documento' => $this->faker->randomElement(['CC', 'TI', 'CE']),
+            'numero_documento' => $this->faker->unique()->numberBetween(1000000000, 9999999999),
+            'sexo' => $this->faker->randomElement(['Masculino', 'Femenino', 'Otro']),
+            'fecha_nacimiento' => $this->faker->date('Y-m-d', '-20 years'),
+            'correo_personal' => $this->faker->unique()->safeEmail,
+            'correo_institucional' => $this->faker->unique()->companyEmail,
+            'telefono' => $this->faker->phoneNumber,
+            'direccion' => $this->faker->address,
+            'ciudad_id' => Ciudad::inRandomOrder()->first()?->id ?? 1, // Asegúrate que haya ciudades primero
+            'programa_academico_id' => ProgramaAcademico::inRandomOrder()->first()?->id ?? 1, // Igual para programas
         ];
     }
 }

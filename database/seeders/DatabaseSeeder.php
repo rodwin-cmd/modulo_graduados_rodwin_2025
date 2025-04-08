@@ -8,12 +8,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([
-            PaisSeeder::class,
-            DepartamentoSeeder::class,
-            CiudadSeeder::class,
-            ProgramaAcademicoSeeder::class,
-            GraduadosSeeder::class,
-        ]);
+        \App\Models\Departamento::factory(20)->create();
+        \App\Models\Ciudad::factory(20)->create();
+        \App\Models\ProgramaAcademico::factory(20)->create();
+        \App\Models\Graduado::factory(100)->create();
+
     }
 }
