@@ -10,31 +10,25 @@ class EventoGraduado extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'evento_id',
-        'graduado_id',
-        'eventos_contacto_graduados_id',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'id' => 'integer',
-        'evento_id' => 'integer',
+        'evento_contacto_id' => 'integer',
         'graduado_id' => 'integer',
-        'eventos_contacto_graduados_id' => 'integer',
+        'evento_contacto_graduado_id' => 'integer',
     ];
 
-    public function eventosContactoGraduados(): BelongsTo
+    public function eventoContactoGraduado(): BelongsTo
     {
-        return $this->belongsTo(EventosContactoGraduados::class);
+        return $this->belongsTo(EventoContactoGraduado::class);
+    }
+
+    public function eventoContacto(): BelongsTo
+    {
+        return $this->belongsTo(EventoContacto::class);
+    }
+
+    public function graduado(): BelongsTo
+    {
+        return $this->belongsTo(Graduado::class);
     }
 }

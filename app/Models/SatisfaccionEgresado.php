@@ -10,35 +10,26 @@ class SatisfaccionEgresado extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'id_satisfaccion',
-        'encuesta_id',
-        'satisfacion_formacion_acad',
-        'recomendacion_programa',
-        'comentarios_adicionales',
-        'encuestas_seguimiento_graduados_id',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'id' => 'integer',
-        'id_satisfaccion' => 'integer',
         'encuesta_id' => 'integer',
+        'graduado_id' => 'integer',
         'recomendacion_programa' => 'boolean',
-        'encuestas_seguimiento_graduados_id' => 'integer',
+        'encuesta_seguimiento_graduado_id' => 'integer',
     ];
 
-    public function encuestasSeguimientoGraduados(): BelongsTo
+    public function encuestaSeguimientoGraduado(): BelongsTo
     {
-        return $this->belongsTo(EncuestasSeguimientoGraduados::class);
+        return $this->belongsTo(EncuestaSeguimientoGraduado::class);
+    }
+
+    public function encuesta(): BelongsTo
+    {
+        return $this->belongsTo(Encuesta::class);
+    }
+
+    public function graduado(): BelongsTo
+    {
+        return $this->belongsTo(Graduado::class);
     }
 }

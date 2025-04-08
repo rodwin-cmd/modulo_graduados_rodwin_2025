@@ -1,148 +1,152 @@
 models:
-  Graduados:
-    idgraduado: unsignedInteger
+  Graduado:
     nombre: string
     apellidos: string
     tipo_documento: string
-    numero_documento: integer
+    numero_documento: bigInteger unsigned
     sexo: string
-    fecha_nacimiento: datetime
+    fecha_nacimiento: date
     correo_personal: string
     correo_institucional: string
-    telefono: integer
+    telefono: string
     direccion: string
-    ciudad_id: unsignedInteger
+    ciudad_id: foreign
+    timestamps: true
     relationships:
       belongsTo: Ciudad
       hasMany:
-        - Graduaciones
-        - EncuestasSeguimiento
+        - Graduacion
+        - EncuestaSeguimiento
         - TrayectoriaLaboral
-        - EstudiosPosteriores
-        - RedesProfesionales
+        - EstudioPosterior
+        - RedProfesional
+        - SatisfaccionEgresado
+        - EventoGraduado
 
   Pais:
-    id: unsignedInteger
     nombre: string
+    timestamps: true
     relationships:
-      hasMany: Departamentos
+      hasMany: Departamento
 
   Departamento:
-    id: unsignedInteger
     nombre: string
-    pais_id: unsignedInteger
+    pais_id: foreign
+    timestamps: true
     relationships:
       belongsTo: Pais
-      hasMany: Ciudades
+      hasMany: Ciudad
 
   Ciudad:
-    id: unsignedInteger
     nombre: string
-    departamento_id: unsignedInteger
+    departamento_id: foreign
+    timestamps: true
     relationships:
       belongsTo: Departamento
-      hasMany: Graduados
+      hasMany: Graduado
 
-  ProgramasAcademicos:
-    idPrograma: unsignedInteger
+  ProgramaAcademico:
     programa: string
     facultad: string
     nivel: string
     modalidad: string
     codigo_SNIES: integer
+    timestamps: true
     relationships:
-      hasMany: Graduaciones
+      hasMany: Graduacion
 
-  Graduaciones:
-    id_graduaciones: unsignedInteger
-    graduado_id: unsignedInteger
-    programa_id: unsignedInteger
-    fecha_grado: datetime
+  Graduacion:
+    graduado_id: foreign
+    programa_id: foreign
+    fecha_grado: date
     promediofinal: integer
-    mencion_honorifica: string
+    mencion_honorifica: string nullable
+    timestamps: true
     relationships:
       belongsTo:
-        - Graduados
-        - ProgramasAcademicos
+        - Graduado
+        - ProgramaAcademico
 
-  EncuestasSeguimiento:
-    id_encuestas: unsignedInteger
-    graduado_id: unsignedInteger
-    anio_aplicacion: datetime
-    fecha_respuesta: datetime
+  EncuestaSeguimiento:
+    graduado_id: foreign
+    anio_aplicacion: date
+    fecha_respuesta: date
     tipo_encuesta: string
     medio_aplicacion: string
+    timestamps: true
     relationships:
-      belongsTo: Graduados
+      belongsTo: Graduado
       hasMany:
-        - Competencias
+        - Competencia
         - SatisfaccionEgresado
 
+  Competencia:
+    encuesta_id: foreign
+    nivel_competencias: string
+    timestamps: true
+    relationships:
+      belongsTo: EncuestaSeguimiento
+
+  SatisfaccionEgresado:
+    encuesta_id: foreign
+    graduado_id: foreign
+    satisfacion_formacion_acad: string
+    recomendacion_programa: boolean
+    comentarios_adicionales: string
+    timestamps: true
+    relationships:
+      belongsTo:
+        - EncuestaSeguimiento
+        - Graduado
+
   TrayectoriaLaboral:
-    id_trayectoria: unsignedInteger
-    graduado_id: unsignedInteger
+    graduado_id: foreign
     empresa: string
     cargo: string
     sector: string
     ciudad: string
     pais: string
     area_desempeno: string
-    fecha_inicio: datetime
-    fecha_fin: datetime
+    fecha_inicio: date
+    fecha_fin: date
     relacion_formacion: boolean
+    timestamps: true
     relationships:
-      belongsTo: Graduados
+      belongsTo: Graduado
 
-  EstudiosPosteriores:
-    id_estudios_post: unsignedInteger
-    graduado_id: unsignedInteger
+  EstudioPosterior:
+    graduado_id: foreign
     nivel_estudios: string
     programa: string
     institucion: string
     pais: string
     ciudad: string
-    fecha_inicio: datetime
-    fecha_fin: datetime
+    fecha_inicio: date
+    fecha_fin: date
+    timestamps: true
     relationships:
-      belongsTo: Graduados
+      belongsTo: Graduado
 
-  Competencias:
-    id_competencias: unsignedInteger
-    encuesta_id: unsignedInteger
-    nivel_competencias: string
-    relationships:
-      belongsTo: EncuestasSeguimiento
-
-  SatisfaccionEgresado:
-    id_satisfaccion: unsignedInteger
-    encuesta_id: unsignedInteger
-    satisfacion_formacion_acad: string
-    recomendacion_programa: boolean
-    comentarios_adicionales: string
-    relationships:
-      belongsTo:
-        - EncuestasSeguimiento
-        - Graduados
-
-  EventosContacto:
-    id_eventos: unsignedInteger
-    tipo_evento: string
-    fecha_evento: datetime
-    relationships:
-      belongsToMany: Graduados
-
-  EventoGraduado:
-    evento_id: unsignedInteger
-    graduado_id: unsignedInteger
-    relationships:
-      belongsTo:
-        - EventosContacto
-        - Graduados
-
-  RedesProfesionales:
-    id_redesp: unsignedInteger
-    graduado_id: unsignedInteger
+  RedProfesional:
+    graduado_id: foreign
     red_social: string
     url_red_social: string
+    timestamps: true
     relationships:
-      belongsTo: Graduados
+      belongsTo: Graduado
+
+  EventoContacto:
+    tipo_evento: string
+    fecha_evento: date
+    timestamps: true
+    relationships:
+      belongsToMany: Graduado
+
+  EventoGraduado:
+    evento_contacto_id: foreign
+    graduado_id: foreign
+    timestamps: true
+    relationships:
+      belongsTo:
+        - EventoContacto
+        - Graduado

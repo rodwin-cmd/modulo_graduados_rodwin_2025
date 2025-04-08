@@ -11,21 +11,6 @@ class Departamento extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'nombre',
-        'pais_id',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'id' => 'integer',
         'pais_id' => 'integer',
@@ -36,8 +21,8 @@ class Departamento extends Model
         return $this->belongsTo(Pais::class);
     }
 
-    public function ciudades(): HasMany
+    public function ciudads(): HasMany
     {
-        return $this->hasMany(Ciudades::class);
+        return $this->hasMany(Ciudad::class);
     }
 }

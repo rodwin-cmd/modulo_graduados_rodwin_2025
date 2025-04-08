@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Departamento;
-use App\Models\Pais;
+use App\Models\Pai;
 
 class DepartamentoFactory extends Factory
 {
@@ -23,7 +23,7 @@ class DepartamentoFactory extends Factory
     {
         return [
             'nombre' => fake()->word(),
-            'pais_id' => Pais::factory(),
+            'pais_id' => Pai::factory(),
         ];
     }
 }

@@ -4,8 +4,10 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\EventoContacto;
+use App\Models\EventoContactoGraduado;
 use App\Models\EventoGraduado;
-use App\Models\EventosContactoGraduados;
+use App\Models\Graduado;
 
 class EventoGraduadoFactory extends Factory
 {
@@ -22,9 +24,9 @@ class EventoGraduadoFactory extends Factory
     public function definition(): array
     {
         return [
-            'evento_id' => fake()->randomNumber(),
-            'graduado_id' => fake()->randomNumber(),
-            'eventos_contacto_graduados_id' => EventosContactoGraduados::factory(),
+            'evento_contacto_id' => EventoContacto::factory(),
+            'graduado_id' => Graduado::factory(),
+            'evento_contacto_graduado_id' => EventoContactoGraduado::factory(),
         ];
     }
 }
