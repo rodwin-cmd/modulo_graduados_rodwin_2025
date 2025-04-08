@@ -1,0 +1,122 @@
+models:
+  Graduados:
+    idgraduado: unsignedInteger
+    nombre: string
+    apellidos: string
+    tipo_documento: string
+    numero_documento: integer
+    sexo: string
+    fecha_nacimiento: datetime
+    correo_personal: string
+    correo_institucional: string
+    telefono: integer
+    direccion: string
+    ciudad_id: unsignedInteger
+    relationships:
+      belongsTo: Ciudad
+      hasMany:
+        - Graduaciones
+        - Encuestas_seguimiento
+        - Trayectoria_laboral
+        - Estudios_posteriores
+        - Redes_profesionales
+
+  Ciudad:
+    id: unsignedInteger
+    nombre: string
+    departamento: string
+    pais: string
+    relationships:
+      hasMany: Graduados
+
+  Programas_academicos:
+    idPrograma: unsignedInteger
+    programa: string
+    facultad: string
+    nivel: string
+    modalidad: string
+    codigo_SNIES: integer
+    relationships:
+      belongsToMany: Graduaciones
+
+  Graduaciones:
+    id_graduaciones: unsignedInteger
+    graduado_id: unsignedInteger
+    programa_id: unsignedInteger
+    fecha_grado: datetime
+    promediofinal: integer
+    mencion_honorifica: string
+    relationships:
+      belongsTo:
+        - Graduados
+        - Programas_academicos
+
+  Encuestas_seguimiento:
+    id_encuestas: unsignedInteger
+    graduado_id: unsignedInteger
+    anio_aplicacion: datetime
+    fecha_respuesta: datetime
+    tipo_encuesta: string
+    medio_aplicacion: string
+    relationships:
+      belongsTo: Graduados
+      hasMany: Competencias
+
+  Trayectoria_laboral:
+    id_trayectoria: unsignedInteger
+    graduado_id: unsignedInteger
+    empresa: string
+    cargo: string
+    sector: string
+    ciudad: string
+    pais: string
+    area_desempeno: string
+    fecha_inicio: datetime
+    fecha_fin: datetime
+    relacion_formacion: boolean
+    relationships:
+      belongsTo: Graduados
+
+  Estudios_posteriores:
+    id_estudios_post: unsignedInteger
+    graduado_id: unsignedInteger
+    nivel_estudios: string
+    programa: string
+    institucion: string
+    pais: string
+    ciudad: string
+    fecha_inicio: datetime
+    fecha_fin: datetime
+    relationships:
+      belongsTo: Graduados
+
+  Competencias:
+    id_competencias: unsignedInteger
+    encuesta_id: unsignedInteger
+    nivel_competencias: string
+    relationships:
+      belongsTo: Encuestas_seguimiento
+
+  Satisfaccion_egresado:
+    id_satisfaccion: unsignedInteger
+    encuesta_id: unsignedInteger
+    satisfacion_formacion_acad: string
+    recomendacion_programa: boolean
+    comentarios_adicionales: string
+    relationships:
+      belongsTo: Encuestas_seguimiento
+
+  Eventos_contacto:
+    id_eventos: unsignedInteger
+    tipo_evento: string
+    fecha_evento: datetime
+    relationships:
+      belongsToMany: Graduados
+
+  Redes_profesionales:
+    id_redesp: unsignedInteger
+    graduado_id: unsignedInteger
+    red_social: string
+    url_red_social: string
+    relationships:
+      belongsTo: Graduados
