@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Ciudad;
 use App\Models\Graduado;
+use App\Models\ProgramaAcademico;
 
 class GraduadoFactory extends Factory
 {
@@ -33,6 +34,7 @@ class GraduadoFactory extends Factory
             'telefono' => fake()->word(),
             'direccion' => fake()->word(),
             'ciudad_id' => Ciudad::factory(),
+            'programa_academico_id' => ProgramaAcademico::factory(),
         ];
     }
 }

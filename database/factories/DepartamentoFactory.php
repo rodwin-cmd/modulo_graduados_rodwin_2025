@@ -22,6 +22,7 @@ class DepartamentoFactory extends Factory
     public function definition(): array
     {
         return [
+            'id_departamento' => fake()->word(),
             'nombre' => fake()->word(),
             'pais_id' => Pai::factory(),
         ];

@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('satisfaccion_egresados', function (Blueprint $table) {
+        Schema::create('departamentos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('encuesta_id')->constrained();
-            $table->foreignId('graduado_id')->constrained();
-            $table->string('satisfacion_formacion_acad');
-            $table->boolean('recomendacion_programa');
-            $table->string('comentarios_adicionales');
-            $table->foreignId('encuesta_seguimiento_graduado_id');
+            $table->string('id_departamento');
+            $table->string('nombre');
+            $table->foreignId('pais_id')->constrained('pais');
             $table->timestamps();
         });
 
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('satisfaccion_egresados');
+        Schema::dropIfExists('departamentos');
     }
 };

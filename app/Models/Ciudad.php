@@ -13,7 +13,6 @@ class Ciudad extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'nombre_ciudad' => 'string',
         'departamento_id' => 'integer',
     ];
 

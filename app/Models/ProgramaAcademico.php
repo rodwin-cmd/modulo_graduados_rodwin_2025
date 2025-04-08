@@ -14,8 +14,8 @@ class ProgramaAcademico extends Model
         'id' => 'integer',
     ];
 
-    public function graduacions(): HasMany
+    public function graduados(): HasMany
     {
-        return $this->hasMany(Graduacion::class);
+        return $this->hasMany(Graduado::class);
     }
 }

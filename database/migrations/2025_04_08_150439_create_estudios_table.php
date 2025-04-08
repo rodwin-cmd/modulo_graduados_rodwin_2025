@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('encuesta_seguimientos', function (Blueprint $table) {
+        Schema::create('estudios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('graduado_id')->constrained();
-            $table->date('anio_aplicacion');
-            $table->date('fecha_respuesta');
-            $table->string('tipo_encuesta');
-            $table->string('medio_aplicacion');
+            $table->string('nivel_estudios');
+            $table->string('programa');
+            $table->string('institucion');
+            $table->string('pais');
+            $table->string('ciudad');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->foreignId('graduado_id');
             $table->timestamps();
         });
 
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('encuesta_seguimientos');
+        Schema::dropIfExists('estudios');
     }
 };

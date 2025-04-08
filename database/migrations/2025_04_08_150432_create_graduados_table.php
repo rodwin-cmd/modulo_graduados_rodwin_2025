@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('direccion');
             $table->foreignId('ciudad_id')->constrained();
+            $table->foreignId('programa_academico_id');
             $table->timestamps();
         });
 

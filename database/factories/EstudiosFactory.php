@@ -4,17 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\EstudioPosterior;
+use App\Models\Estudios;
 use App\Models\Graduado;
 
-class EstudioPosteriorFactory extends Factory
+class EstudiosFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = EstudioPosterior::class;
+    protected $model = Estudios::class;
 
     /**
      * Define the model's default state.
@@ -22,7 +22,6 @@ class EstudioPosteriorFactory extends Factory
     public function definition(): array
     {
         return [
-            'graduado_id' => Graduado::factory(),
             'nivel_estudios' => fake()->word(),
             'programa' => fake()->word(),
             'institucion' => fake()->word(),
@@ -30,6 +29,7 @@ class EstudioPosteriorFactory extends Factory
             'ciudad' => fake()->word(),
             'fecha_inicio' => fake()->date(),
             'fecha_fin' => fake()->date(),
+            'graduado_id' => Graduado::factory(),
         ];
     }
 }

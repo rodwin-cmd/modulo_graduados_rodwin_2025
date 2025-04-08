@@ -22,7 +22,6 @@ class TrayectoriaLaboralFactory extends Factory
     public function definition(): array
     {
         return [
-            'graduado_id' => Graduado::factory(),
             'empresa' => fake()->word(),
             'cargo' => fake()->word(),
             'sector' => fake()->word(),
@@ -32,6 +31,7 @@ class TrayectoriaLaboralFactory extends Factory
             'fecha_inicio' => fake()->date(),
             'fecha_fin' => fake()->date(),
             'relacion_formacion' => fake()->boolean(),
+            'graduado_id' => Graduado::factory(),
         ];
     }
 }

@@ -22,9 +22,11 @@ class RedProfesionalFactory extends Factory
     public function definition(): array
     {
         return [
-            'graduado_id' => Graduado::factory(),
             'red_social' => fake()->word(),
             'url_red_social' => fake()->word(),
+            'portafolio' => fake()->word(),
+            'curriculum_url' => fake()->word(),
+            'graduado_id' => Graduado::factory(),
         ];
     }
 }

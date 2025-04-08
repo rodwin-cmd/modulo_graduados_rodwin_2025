@@ -4,57 +4,40 @@ created:
     - database/factories/DepartamentoFactory.php
     - database/factories/CiudadFactory.php
     - database/factories/ProgramaAcademicoFactory.php
-    - database/factories/GraduacionFactory.php
-    - database/factories/EncuestaSeguimientoFactory.php
-    - database/factories/CompetenciaFactory.php
-    - database/factories/SatisfaccionEgresadoFactory.php
+    - database/factories/EncuestaFactory.php
     - database/factories/TrayectoriaLaboralFactory.php
-    - database/factories/EstudioPosteriorFactory.php
+    - database/factories/EstudiosFactory.php
     - database/factories/RedProfesionalFactory.php
-    - database/factories/EventoContactoFactory.php
-    - database/factories/EventoGraduadoFactory.php
-    - database/migrations/2025_04_08_041257_create_graduados_table.php
-    - database/migrations/2025_04_08_041258_create_pais_table.php
-    - database/migrations/2025_04_08_041259_create_departamentos_table.php
-    - database/migrations/2025_04_08_041300_create_ciudads_table.php
-    - database/migrations/2025_04_08_041301_create_programa_academicos_table.php
-    - database/migrations/2025_04_08_041302_create_graduacions_table.php
-    - database/migrations/2025_04_08_041303_create_encuesta_seguimientos_table.php
-    - database/migrations/2025_04_08_041304_create_competencias_table.php
-    - database/migrations/2025_04_08_041305_create_satisfaccion_egresados_table.php
-    - database/migrations/2025_04_08_041306_create_trayectoria_laborals_table.php
-    - database/migrations/2025_04_08_041307_create_estudio_posteriors_table.php
-    - database/migrations/2025_04_08_041308_create_red_profesionals_table.php
-    - database/migrations/2025_04_08_041309_create_evento_contactos_table.php
-    - database/migrations/2025_04_08_041310_create_evento_graduados_table.php
-    - database/migrations/2025_04_08_041311_create_evento_contacto_graduado_table.php
+    - database/factories/EventoFactory.php
+    - database/migrations/2025_04_08_150432_create_graduados_table.php
+    - database/migrations/2025_04_08_150433_create_pais_table.php
+    - database/migrations/2025_04_08_150434_create_departamentos_table.php
+    - database/migrations/2025_04_08_150435_create_ciudads_table.php
+    - database/migrations/2025_04_08_150436_create_programa_academicos_table.php
+    - database/migrations/2025_04_08_150437_create_encuestas_table.php
+    - database/migrations/2025_04_08_150438_create_trayectoria_laborals_table.php
+    - database/migrations/2025_04_08_150439_create_estudios_table.php
+    - database/migrations/2025_04_08_150440_create_red_profesionals_table.php
+    - database/migrations/2025_04_08_150441_create_eventos_table.php
     - app/Models/Graduado.php
     - app/Models/Pais.php
     - app/Models/Departamento.php
     - app/Models/Ciudad.php
     - app/Models/ProgramaAcademico.php
-    - app/Models/Graduacion.php
-    - app/Models/EncuestaSeguimiento.php
-    - app/Models/Competencia.php
-    - app/Models/SatisfaccionEgresado.php
+    - app/Models/Encuesta.php
     - app/Models/TrayectoriaLaboral.php
-    - app/Models/EstudioPosterior.php
+    - app/Models/Estudios.php
     - app/Models/RedProfesional.php
-    - app/Models/EventoContacto.php
-    - app/Models/EventoGraduado.php
+    - app/Models/Evento.php
 models:
     User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
-    Graduado: { nombre: string, apellidos: string, tipo_documento: string, numero_documento: 'bigInteger unsigned', sexo: string, fecha_nacimiento: date, correo_personal: string, correo_institucional: string, telefono: string, direccion: string, ciudad_id: foreign, timestamps: timestamps, relationships: { belongsTo: Ciudad, hasMany: 'Graduacion EncuestaSeguimiento TrayectoriaLaboral EstudioPosterior RedProfesional SatisfaccionEgresado EventoGraduado' } }
+    Graduado: { nombre: string, apellidos: string, tipo_documento: string, numero_documento: 'id unsignedBigInteger', sexo: string, fecha_nacimiento: date, correo_personal: string, correo_institucional: string, telefono: string, direccion: string, ciudad_id: foreign, timestamps: timestamps, relationships: { belongsTo: 'Ciudad, ProgramaAcademico', hasMany: 'Encuesta TrayectoriaLaboral Estudio RedProfesional Evento' } }
     Pais: { nombre: string, timestamps: timestamps, relationships: { hasMany: Departamento } }
-    Departamento: { nombre: string, pais_id: foreign, timestamps: timestamps, relationships: { belongsTo: Pais, hasMany: Ciudad } }
-    Ciudad: { nombre: string, departamento_id: foreign, timestamps: timestamps, relationships: { belongsTo: Departamento, hasMany: Graduado } }
-    ProgramaAcademico: { programa: string, facultad: string, nivel: string, modalidad: string, codigo_SNIES: integer, timestamps: timestamps, relationships: { hasMany: Graduacion } }
-    Graduacion: { graduado_id: foreign, programa_id: foreign, fecha_grado: date, promediofinal: integer, mencion_honorifica: 'string nullable', timestamps: timestamps, relationships: { belongsTo: 'Graduado ProgramaAcademico' } }
-    EncuestaSeguimiento: { graduado_id: foreign, anio_aplicacion: date, fecha_respuesta: date, tipo_encuesta: string, medio_aplicacion: string, timestamps: timestamps, relationships: { belongsTo: Graduado, hasMany: 'Competencia SatisfaccionEgresado' } }
-    Competencia: { encuesta_id: foreign, nivel_competencias: string, timestamps: timestamps, relationships: { belongsTo: EncuestaSeguimiento } }
-    SatisfaccionEgresado: { encuesta_id: foreign, graduado_id: foreign, satisfacion_formacion_acad: string, recomendacion_programa: boolean, comentarios_adicionales: string, timestamps: timestamps, relationships: { belongsTo: 'EncuestaSeguimiento Graduado' } }
-    TrayectoriaLaboral: { graduado_id: foreign, empresa: string, cargo: string, sector: string, ciudad: string, pais: string, area_desempeno: string, fecha_inicio: date, fecha_fin: date, relacion_formacion: boolean, timestamps: timestamps, relationships: { belongsTo: Graduado } }
-    EstudioPosterior: { graduado_id: foreign, nivel_estudios: string, programa: string, institucion: string, pais: string, ciudad: string, fecha_inicio: date, fecha_fin: date, timestamps: timestamps, relationships: { belongsTo: Graduado } }
-    RedProfesional: { graduado_id: foreign, red_social: string, url_red_social: string, timestamps: timestamps, relationships: { belongsTo: Graduado } }
-    EventoContacto: { tipo_evento: string, fecha_evento: date, timestamps: timestamps, relationships: { belongsToMany: Graduado } }
-    EventoGraduado: { evento_contacto_id: foreign, graduado_id: foreign, timestamps: timestamps, relationships: { belongsTo: 'EventoContacto Graduado' } }
+    Departamento: { id_departamento: 'id string', nombre: string, pais_id: foreign, timestamps: timestamps, relationships: { belongsTo: Pais, hasMany: Ciudad } }
+    Ciudad: { id_ciudad: 'id string', nombre: string, departamento_id: foreign, timestamps: timestamps, relationships: { belongsTo: Departamento, hasMany: Graduado } }
+    ProgramaAcademico: { id_programa: 'id string', programa: string, facultad: string, nivel: string, modalidad: string, codigo_SNIES: integer, timestamps: timestamps, relationships: { hasMany: Graduado } }
+    Encuesta: { id_encuesta: string, nombre: string, fecha_aplicacion: date, fecha_respuesta: date, tipo_encuesta: string, medio_aplicacion: string, timestamps: timestamps, relationships: { belongsTo: Graduado } }
+    TrayectoriaLaboral: { empresa: string, cargo: string, sector: string, ciudad: string, pais: string, area_desempeno: string, fecha_inicio: date, fecha_fin: date, relacion_formacion: boolean, timestamps: timestamps, relationships: { belongsTo: Graduado } }
+    Estudios: { nivel_estudios: string, programa: string, institucion: string, pais: string, ciudad: string, fecha_inicio: date, fecha_fin: date, timestamps: timestamps, relationships: { belongsTo: Graduado } }
+    RedProfesional: { red_social: string, url_red_social: string, portafolio: string, curriculum_url: string, timestamps: timestamps, relationships: { belongsTo: Graduado } }
+    Evento: { evento_id: string, nombre_evento: string, ciudad_evento: string, lugar_evento: string, fecha_evento: string, timestamps: timestamps, relationships: { belongsTo: Graduado } }

@@ -4,19 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\EventoContacto;
-use App\Models\EventoContactoGraduado;
-use App\Models\EventoGraduado;
+use App\Models\Evento;
 use App\Models\Graduado;
 
-class EventoGraduadoFactory extends Factory
+class EventoFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = EventoGraduado::class;
+    protected $model = Evento::class;
 
     /**
      * Define the model's default state.
@@ -24,9 +22,12 @@ class EventoGraduadoFactory extends Factory
     public function definition(): array
     {
         return [
-            'evento_contacto_id' => EventoContacto::factory(),
+            'evento_id' => fake()->word(),
+            'nombre_evento' => fake()->word(),
+            'ciudad_evento' => fake()->word(),
+            'lugar_evento' => fake()->word(),
+            'fecha_evento' => fake()->word(),
             'graduado_id' => Graduado::factory(),
-            'evento_contacto_graduado_id' => EventoContactoGraduado::factory(),
         ];
     }
 }

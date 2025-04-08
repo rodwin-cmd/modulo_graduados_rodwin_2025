@@ -3,7 +3,7 @@ models:
     nombre: string
     apellidos: string
     tipo_documento: string
-    numero_documento: bigInteger unsigned
+    numero_documento: id unsignedBigInteger
     sexo: string
     fecha_nacimiento: date
     correo_personal: string
@@ -13,15 +13,13 @@ models:
     ciudad_id: foreign
     timestamps: true
     relationships:
-      belongsTo: Ciudad
+      belongsTo: Ciudad, ProgramaAcademico
       hasMany:
-        - Graduacion
-        - EncuestaSeguimiento
+        - Encuesta
         - TrayectoriaLaboral
-        - EstudioPosterior
+        - Estudio
         - RedProfesional
-        - SatisfaccionEgresado
-        - EventoGraduado
+        - Evento
 
   Pais:
     nombre: string
@@ -30,6 +28,7 @@ models:
       hasMany: Departamento
 
   Departamento:
+    id_departamento: id string
     nombre: string
     pais_id: foreign
     timestamps: true
@@ -38,6 +37,7 @@ models:
       hasMany: Ciudad
 
   Ciudad:
+    id_ciudad: id string
     nombre: string
     departamento_id: foreign
     timestamps: true
@@ -46,6 +46,7 @@ models:
       hasMany: Graduado
 
   ProgramaAcademico:
+    id_programa: id string
     programa: string
     facultad: string
     nivel: string
@@ -53,54 +54,23 @@ models:
     codigo_SNIES: integer
     timestamps: true
     relationships:
-      hasMany: Graduacion
+      hasMany: Graduado
 
-  Graduacion:
-    graduado_id: foreign
-    programa_id: foreign
-    fecha_grado: date
-    promediofinal: integer
-    mencion_honorifica: string nullable
-    timestamps: true
-    relationships:
-      belongsTo:
-        - Graduado
-        - ProgramaAcademico
 
-  EncuestaSeguimiento:
-    graduado_id: foreign
-    anio_aplicacion: date
+  Encuesta:
+    id_encuesta: string
+    nombre: string
+    fecha_aplicacion: date
     fecha_respuesta: date
     tipo_encuesta: string
     medio_aplicacion: string
     timestamps: true
     relationships:
       belongsTo: Graduado
-      hasMany:
-        - Competencia
-        - SatisfaccionEgresado
 
-  Competencia:
-    encuesta_id: foreign
-    nivel_competencias: string
-    timestamps: true
-    relationships:
-      belongsTo: EncuestaSeguimiento
 
-  SatisfaccionEgresado:
-    encuesta_id: foreign
-    graduado_id: foreign
-    satisfacion_formacion_acad: string
-    recomendacion_programa: boolean
-    comentarios_adicionales: string
-    timestamps: true
-    relationships:
-      belongsTo:
-        - EncuestaSeguimiento
-        - Graduado
 
   TrayectoriaLaboral:
-    graduado_id: foreign
     empresa: string
     cargo: string
     sector: string
@@ -114,8 +84,7 @@ models:
     relationships:
       belongsTo: Graduado
 
-  EstudioPosterior:
-    graduado_id: foreign
+  Estudios:
     nivel_estudios: string
     programa: string
     institucion: string
@@ -128,25 +97,21 @@ models:
       belongsTo: Graduado
 
   RedProfesional:
-    graduado_id: foreign
     red_social: string
     url_red_social: string
+    portafolio: string
+    curriculum_url: string
     timestamps: true
     relationships:
       belongsTo: Graduado
 
-  EventoContacto:
-    tipo_evento: string
-    fecha_evento: date
-    timestamps: true
-    relationships:
-      belongsToMany: Graduado
-
-  EventoGraduado:
-    evento_contacto_id: foreign
-    graduado_id: foreign
+  Evento:
+    evento_id: string
+    nombre_evento: string
+    ciudad_evento: string
+    lugar_evento: string
+    fecha_evento: string
     timestamps: true
     relationships:
       belongsTo:
-        - EventoContacto
         - Graduado

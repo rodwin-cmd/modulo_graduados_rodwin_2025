@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('red_profesionals', function (Blueprint $table) {
+        Schema::create('ciudads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('graduado_id')->constrained();
-            $table->string('red_social');
-            $table->string('url_red_social');
+            $table->string('id_ciudad');
+            $table->string('nombre');
+            $table->foreignId('departamento_id')->constrained();
             $table->timestamps();
         });
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('red_profesionals');
+        Schema::dropIfExists('ciudads');
     }
 };

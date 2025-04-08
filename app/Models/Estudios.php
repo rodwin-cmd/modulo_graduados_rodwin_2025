@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class EstudioPosterior extends Model
+class Estudios extends Model
 {
     use HasFactory;
 
     protected $casts = [
         'id' => 'integer',
-        'graduado_id' => 'integer',
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date',
+        'graduado_id' => 'integer',
     ];
 
     public function graduado(): BelongsTo

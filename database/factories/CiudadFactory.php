@@ -22,6 +22,7 @@ class CiudadFactory extends Factory
     public function definition(): array
     {
         return [
+            'id_ciudad' => fake()->word(),
             'nombre' => fake()->word(),
             'departamento_id' => Departamento::factory(),
         ];

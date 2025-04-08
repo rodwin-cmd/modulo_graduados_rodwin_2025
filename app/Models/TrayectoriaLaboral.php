@@ -12,10 +12,10 @@ class TrayectoriaLaboral extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'graduado_id' => 'integer',
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date',
         'relacion_formacion' => 'boolean',
+        'graduado_id' => 'integer',
     ];
 
     public function graduado(): BelongsTo

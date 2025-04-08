@@ -16,6 +16,7 @@ class Graduado extends Model
         'numero_documento' => 'integer',
         'fecha_nacimiento' => 'date',
         'ciudad_id' => 'integer',
+        'programa_academico_id' => 'integer',
     ];
 
     public function ciudad(): BelongsTo
@@ -23,8 +24,13 @@ class Graduado extends Model
         return $this->belongsTo(Ciudad::class);
     }
 
-    public function graduacionEncuestaSeguimientoTrayectoriaLaboralEstudioPosteriorRedProfesionalSatisfaccionEgresadoEventoGraduados(): HasMany
+    public function programaAcademico(): BelongsTo
     {
-        return $this->hasMany(GraduacionEncuestaSeguimientoTrayectoriaLaboralEstudioPosteriorRedProfesionalSatisfaccionEgresadoEventoGraduado::class);
+        return $this->belongsTo(ProgramaAcademico::class);
+    }
+
+    public function encuestaTrayectoriaLaboralEstudioRedProfesionalEventos(): HasMany
+    {
+        return $this->hasMany(EncuestaTrayectoriaLaboralEstudioRedProfesionalEvento::class);
     }
 }

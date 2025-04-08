@@ -21,6 +21,7 @@ class ProgramaAcademicoFactory extends Factory
     public function definition(): array
     {
         return [
+            'id_programa' => fake()->word(),
             'programa' => fake()->word(),
             'facultad' => fake()->word(),
             'nivel' => fake()->word(),
