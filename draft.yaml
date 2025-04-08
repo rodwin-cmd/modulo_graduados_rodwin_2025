@@ -16,20 +16,34 @@ models:
       belongsTo: Ciudad
       hasMany:
         - Graduaciones
-        - Encuestas_seguimiento
-        - Trayectoria_laboral
-        - Estudios_posteriores
-        - Redes_profesionales
+        - EncuestasSeguimiento
+        - TrayectoriaLaboral
+        - EstudiosPosteriores
+        - RedesProfesionales
+
+  Pais:
+    id: unsignedInteger
+    nombre: string
+    relationships:
+      hasMany: Departamentos
+
+  Departamento:
+    id: unsignedInteger
+    nombre: string
+    pais_id: unsignedInteger
+    relationships:
+      belongsTo: Pais
+      hasMany: Ciudades
 
   Ciudad:
     id: unsignedInteger
     nombre: string
-    departamento: string
-    pais: string
+    departamento_id: unsignedInteger
     relationships:
+      belongsTo: Departamento
       hasMany: Graduados
 
-  Programas_academicos:
+  ProgramasAcademicos:
     idPrograma: unsignedInteger
     programa: string
     facultad: string
@@ -37,7 +51,7 @@ models:
     modalidad: string
     codigo_SNIES: integer
     relationships:
-      belongsToMany: Graduaciones
+      hasMany: Graduaciones
 
   Graduaciones:
     id_graduaciones: unsignedInteger
@@ -49,9 +63,9 @@ models:
     relationships:
       belongsTo:
         - Graduados
-        - Programas_academicos
+        - ProgramasAcademicos
 
-  Encuestas_seguimiento:
+  EncuestasSeguimiento:
     id_encuestas: unsignedInteger
     graduado_id: unsignedInteger
     anio_aplicacion: datetime
@@ -60,9 +74,11 @@ models:
     medio_aplicacion: string
     relationships:
       belongsTo: Graduados
-      hasMany: Competencias
+      hasMany:
+        - Competencias
+        - SatisfaccionEgresado
 
-  Trayectoria_laboral:
+  TrayectoriaLaboral:
     id_trayectoria: unsignedInteger
     graduado_id: unsignedInteger
     empresa: string
@@ -77,7 +93,7 @@ models:
     relationships:
       belongsTo: Graduados
 
-  Estudios_posteriores:
+  EstudiosPosteriores:
     id_estudios_post: unsignedInteger
     graduado_id: unsignedInteger
     nivel_estudios: string
@@ -95,25 +111,35 @@ models:
     encuesta_id: unsignedInteger
     nivel_competencias: string
     relationships:
-      belongsTo: Encuestas_seguimiento
+      belongsTo: EncuestasSeguimiento
 
-  Satisfaccion_egresado:
+  SatisfaccionEgresado:
     id_satisfaccion: unsignedInteger
     encuesta_id: unsignedInteger
     satisfacion_formacion_acad: string
     recomendacion_programa: boolean
     comentarios_adicionales: string
     relationships:
-      belongsTo: Encuestas_seguimiento
+      belongsTo:
+        - EncuestasSeguimiento
+        - Graduados
 
-  Eventos_contacto:
+  EventosContacto:
     id_eventos: unsignedInteger
     tipo_evento: string
     fecha_evento: datetime
     relationships:
       belongsToMany: Graduados
 
-  Redes_profesionales:
+  EventoGraduado:
+    evento_id: unsignedInteger
+    graduado_id: unsignedInteger
+    relationships:
+      belongsTo:
+        - EventosContacto
+        - Graduados
+
+  RedesProfesionales:
     id_redesp: unsignedInteger
     graduado_id: unsignedInteger
     red_social: string

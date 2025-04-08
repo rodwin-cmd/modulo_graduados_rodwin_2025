@@ -1,2 +1,60 @@
+created:
+    - database/factories/GraduadosFactory.php
+    - database/factories/PaisFactory.php
+    - database/factories/DepartamentoFactory.php
+    - database/factories/CiudadFactory.php
+    - database/factories/ProgramasAcademicosFactory.php
+    - database/factories/GraduacionesFactory.php
+    - database/factories/EncuestasSeguimientoFactory.php
+    - database/factories/TrayectoriaLaboralFactory.php
+    - database/factories/EstudiosPosterioresFactory.php
+    - database/factories/CompetenciasFactory.php
+    - database/factories/SatisfaccionEgresadoFactory.php
+    - database/factories/EventosContactoFactory.php
+    - database/factories/EventoGraduadoFactory.php
+    - database/factories/RedesProfesionalesFactory.php
+    - database/migrations/2025_04_08_034600_create_graduados_table.php
+    - database/migrations/2025_04_08_034601_create_pais_table.php
+    - database/migrations/2025_04_08_034602_create_departamentos_table.php
+    - database/migrations/2025_04_08_034603_create_ciudads_table.php
+    - database/migrations/2025_04_08_034604_create_programas_academicos_table.php
+    - database/migrations/2025_04_08_034605_create_graduaciones_table.php
+    - database/migrations/2025_04_08_034606_create_encuestas_seguimientos_table.php
+    - database/migrations/2025_04_08_034607_create_trayectoria_laborals_table.php
+    - database/migrations/2025_04_08_034608_create_estudios_posteriores_table.php
+    - database/migrations/2025_04_08_034609_create_competencias_table.php
+    - database/migrations/2025_04_08_034610_create_satisfaccion_egresados_table.php
+    - database/migrations/2025_04_08_034611_create_eventos_contactos_table.php
+    - database/migrations/2025_04_08_034612_create_evento_graduados_table.php
+    - database/migrations/2025_04_08_034613_create_redes_profesionales_table.php
+    - database/migrations/2025_04_08_034614_create_eventos_contacto_graduados_table.php
+    - app/Models/Graduados.php
+    - app/Models/Pais.php
+    - app/Models/Departamento.php
+    - app/Models/Ciudad.php
+    - app/Models/ProgramasAcademicos.php
+    - app/Models/Graduaciones.php
+    - app/Models/EncuestasSeguimiento.php
+    - app/Models/TrayectoriaLaboral.php
+    - app/Models/EstudiosPosteriores.php
+    - app/Models/Competencias.php
+    - app/Models/SatisfaccionEgresado.php
+    - app/Models/EventosContacto.php
+    - app/Models/EventoGraduado.php
+    - app/Models/RedesProfesionales.php
 models:
     User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
+    Graduados: { idgraduado: unsignedInteger, nombre: string, apellidos: string, tipo_documento: string, numero_documento: integer, sexo: string, fecha_nacimiento: datetime, correo_personal: string, correo_institucional: string, telefono: integer, direccion: string, ciudad_id: unsignedInteger, relationships: { belongsTo: Ciudad, hasMany: 'Graduaciones EncuestasSeguimiento TrayectoriaLaboral EstudiosPosteriores RedesProfesionales' } }
+    Pais: { id: unsignedInteger, nombre: string, relationships: { hasMany: Departamentos } }
+    Departamento: { id: unsignedInteger, nombre: string, pais_id: unsignedInteger, relationships: { belongsTo: Pais, hasMany: Ciudades } }
+    Ciudad: { id: unsignedInteger, nombre: string, departamento_id: unsignedInteger, relationships: { belongsTo: Departamento, hasMany: Graduados } }
+    ProgramasAcademicos: { idPrograma: unsignedInteger, programa: string, facultad: string, nivel: string, modalidad: string, codigo_SNIES: integer, relationships: { hasMany: Graduaciones } }
+    Graduaciones: { id_graduaciones: unsignedInteger, graduado_id: unsignedInteger, programa_id: unsignedInteger, fecha_grado: datetime, promediofinal: integer, mencion_honorifica: string, relationships: { belongsTo: 'Graduados ProgramasAcademicos' } }
+    EncuestasSeguimiento: { id_encuestas: unsignedInteger, graduado_id: unsignedInteger, anio_aplicacion: datetime, fecha_respuesta: datetime, tipo_encuesta: string, medio_aplicacion: string, relationships: { belongsTo: Graduados, hasMany: 'Competencias SatisfaccionEgresado' } }
+    TrayectoriaLaboral: { id_trayectoria: unsignedInteger, graduado_id: unsignedInteger, empresa: string, cargo: string, sector: string, ciudad: string, pais: string, area_desempeno: string, fecha_inicio: datetime, fecha_fin: datetime, relacion_formacion: boolean, relationships: { belongsTo: Graduados } }
+    EstudiosPosteriores: { id_estudios_post: unsignedInteger, graduado_id: unsignedInteger, nivel_estudios: string, programa: string, institucion: string, pais: string, ciudad: string, fecha_inicio: datetime, fecha_fin: datetime, relationships: { belongsTo: Graduados } }
+    Competencias: { id_competencias: unsignedInteger, encuesta_id: unsignedInteger, nivel_competencias: string, relationships: { belongsTo: EncuestasSeguimiento } }
+    SatisfaccionEgresado: { id_satisfaccion: unsignedInteger, encuesta_id: unsignedInteger, satisfacion_formacion_acad: string, recomendacion_programa: boolean, comentarios_adicionales: string, relationships: { belongsTo: 'EncuestasSeguimiento Graduados' } }
+    EventosContacto: { id_eventos: unsignedInteger, tipo_evento: string, fecha_evento: datetime, relationships: { belongsToMany: Graduados } }
+    EventoGraduado: { evento_id: unsignedInteger, graduado_id: unsignedInteger, relationships: { belongsTo: 'EventosContacto Graduados' } }
+    RedesProfesionales: { id_redesp: unsignedInteger, graduado_id: unsignedInteger, red_social: string, url_red_social: string, relationships: { belongsTo: Graduados } }
