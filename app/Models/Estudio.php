@@ -6,17 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Estudios extends Model
+class Estudio extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'id' => 'integer',
-        'fecha_inicio' => 'date',
-        'fecha_fin' => 'date',
-        'graduado_id' => 'integer',
+    protected $fillable = [
+        'nivel_academico',
+        'programa',
+        'institucion',
+        'fecha_inicio',
+        'fecha_fin',
     ];
 
+    /**
+     * Relación con el graduado (un estudio pertenece a un graduado)
+     */
     public function graduado(): BelongsTo
     {
         return $this->belongsTo(Graduado::class);

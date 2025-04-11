@@ -10,14 +10,30 @@ class TrayectoriaLaboral extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'empresa',
+        'direccion',
+        'cargo',
+        'sector_productivo',
+        'ciudad',
+        'pais',
+        'area_desempeno',
+        'fecha_inicio',
+        'fecha_fin',
+        'relacion_formacion',
+
+    ];
+
+    // manejo de tipos elocuent
     protected $casts = [
-        'id' => 'integer',
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date',
         'relacion_formacion' => 'boolean',
-        'graduado_id' => 'integer',
     ];
 
+    /**
+     * Relación con el graduado (una trayectoria laboral pertenece a un graduado)
+     */
     public function graduado(): BelongsTo
     {
         return $this->belongsTo(Graduado::class);

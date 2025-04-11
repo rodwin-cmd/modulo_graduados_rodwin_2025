@@ -10,9 +10,7 @@ class ProgramaAcademico extends Model
 {
     use HasFactory;
 
-    // Aquí defines qué columnas pueden ser asignadas en masa
     protected $fillable = [
-        'id_programa',
         'programa',
         'facultad',
         'nivel',
@@ -20,12 +18,9 @@ class ProgramaAcademico extends Model
         'codigo_SNIES',
     ];
 
-    // Aquí defines los tipos de las columnas si quieres
-    protected $casts = [
-        'id' => 'integer',
-        'codigo_SNIES' => 'integer',
-    ];
-
+    /**
+     * Relación con los graduados (un programa académico puede tener muchos graduados)
+     */
     public function graduados(): HasMany
     {
         return $this->hasMany(Graduado::class);

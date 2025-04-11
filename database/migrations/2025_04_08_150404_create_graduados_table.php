@@ -11,25 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
+
         Schema::create('graduados', function (Blueprint $table) {
             $table->id();
-            $table->string('numero_documento');
+            $table->string('numero_documento')->unique();
             $table->string('nombre');
             $table->string('apellidos');
             $table->string('tipo_documento');
             $table->string('sexo');
             $table->date('fecha_nacimiento');
-            $table->string('correo_personal');
-            $table->string('correo_institucional');
-            $table->string('telefono');
+            $table->string('correo_personal', 100);
+            $table->string('correo_institucional', 100);
+            $table->string('telefono', 20);
             $table->string('direccion');
-            $table->foreignId('ciudad_id')->constrained();
-            $table->foreignId('programa_academico_id')->constrained();
+            $table->foreignId('ciudad_id')->constrained('ciudades');
+            $table->foreignId('departamento_id')->constrained();
+            $table->foreignId('programa_academico_id')->constrained('programa_academicos');
             $table->timestamps();
         });
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -37,8 +37,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::disableForeignKeyConstraints();
+
         Schema::dropIfExists('graduados');
-        Schema::enableForeignKeyConstraints();
     }
 };

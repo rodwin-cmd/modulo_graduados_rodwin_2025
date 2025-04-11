@@ -10,13 +10,18 @@ class Encuesta extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'id' => 'integer',
-        'fecha_aplicacion' => 'date',
-        'fecha_respuesta' => 'date',
-        'graduado_id' => 'integer',
+    protected $fillable = [
+        'nombre',
+        'fecha_aplicacion',
+        'fecha_respuesta',
+        'tipo_encuesta',
+        'medio_aplicacion',
+
     ];
 
+    /**
+     * Relación con el graduado (una encuesta pertenece a un graduado)
+     */
     public function graduado(): BelongsTo
     {
         return $this->belongsTo(Graduado::class);

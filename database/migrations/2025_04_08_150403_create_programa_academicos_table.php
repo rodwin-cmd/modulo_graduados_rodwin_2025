@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::create('programa_academicos', function (Blueprint $table) {
             $table->id();
-            $table->string('id_programa');
             $table->string('programa');
             $table->string('facultad');
             $table->string('nivel');
             $table->string('modalidad');
-            $table->integer('codigo_SNIES');
+            $table->integer('codigo_SNIES')->unique();
             $table->timestamps();
         });
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

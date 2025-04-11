@@ -9,18 +9,10 @@ class ProgramaAcademicoFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_programa' => $this->faker->unique()->uuid,
-            'programa' => $this->faker->randomElement([
-                'Ingeniería de Sistemas',
-                'Administración de Empresas',
-                'Contaduría Pública',
-                'Derecho',
-                'Psicología',
-                'Ingeniería Civil'
-            ]),
-            'facultad' => $this->faker->randomElement(['Ingeniería', 'Ciencias Sociales', 'Ciencias Económicas']),
-            'nivel' => $this->faker->randomElement(['Pregrado', 'Posgrado']),
-            'modalidad' => $this->faker->randomElement(['Presencial', 'Virtual']),
+            'programa' => $this->faker->words(3, true),
+            'facultad' => $this->faker->randomElement(['Ingeniería', 'Ciencias Sociales', 'Salud', 'Educación']),
+            'nivel' => $this->faker->randomElement(['Pregrado', 'Especialización', 'Maestría']),
+            'modalidad' => $this->faker->randomElement(['Presencial', 'Virtual', 'Distancia']),
             'codigo_SNIES' => $this->faker->unique()->numberBetween(10000, 99999),
         ];
     }

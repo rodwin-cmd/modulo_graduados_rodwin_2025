@@ -11,23 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::create('encuestas', function (Blueprint $table) {
             $table->id();
-            $table->string('id_encuesta');
             $table->string('nombre');
             $table->date('fecha_aplicacion');
             $table->date('fecha_respuesta');
             $table->string('tipo_encuesta');
             $table->string('medio_aplicacion');
-            $table->foreignId('graduado_id');
+            $table->foreignId('graduado_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
-
-        Schema::enableForeignKeyConstraints();
     }
-
     /**
      * Reverse the migrations.
      */

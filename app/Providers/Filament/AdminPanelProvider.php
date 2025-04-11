@@ -24,8 +24,8 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('admin')
-            ->path('/admin')
+            ->id('dashboard')
+            ->path('dashboard')
             ->login()
             ->brandLogo(asset('asset/images/logoucp.png'))
             ->brandLogoHeight('4rem')
@@ -34,6 +34,8 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Red,
                 'gray'=>Color::Green,
             ])
+            ->font('Poppins')
+            ->favicon('asset/images/ucp.webp')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

@@ -10,9 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use function Pest\Laravel\options;
+
 
 class GraduadoResource extends Resource
 {
@@ -66,8 +64,30 @@ class GraduadoResource extends Resource
                 Forms\Components\TextInput::make('direccion')
                     ->required()
                     ->maxLength(255),
+
+
                 Forms\Components\Select::make('ciudad_id')
-                    ->relationship('ciudad', 'nombre'),
+                    ->label('Ciudad residencia')
+                    ->options(function (callable $get) {
+                        $departamentoId = $get('departamento_id');
+
+                        if (!$departamentoId) return [];
+
+                        return \App\Models\Ciudad::where('departamento_id', $departamentoId)
+                            ->pluck('nombre', 'id');
+                    })
+                    ->required()
+                    ->searchable()
+                    ->preload()
+                    ->disabled(fn (callable $get) => !$get('departamento_id')) // Opcional: desactiva hasta que se seleccione departamento
+                    ->reactive(),
+
+                Forms\Components\Select::make('departamento_id')
+                    ->label('Departamento residencia')
+                    ->relationship('departamento', 'nombre')
+                    ->required()
+                    ->reactive(),
+
                 Forms\Components\Select::make('programa_academico_id')
                     ->relationship('programaAcademico', 'programa')
                     ->searchable()
@@ -123,6 +143,7 @@ class GraduadoResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -130,6 +151,8 @@ class GraduadoResource extends Resource
                 ]),
             ]);
     }
+
+
 
     public static function getRelations(): array
     {
@@ -144,6 +167,7 @@ class GraduadoResource extends Resource
             'index' => Pages\ListGraduados::route('/'),
             'create' => Pages\CreateGraduado::route('/create'),
             'edit' => Pages\EditGraduado::route('/{record}/edit'),
+            'view' => Pages\ViewGraduado::route('/{record}'),
         ];
     }
 }

@@ -10,11 +10,18 @@ class RedProfesional extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'id' => 'integer',
-        'graduado_id' => 'integer',
+    protected $table = 'red_profesionales';
+    protected $fillable = [
+        'red_social',
+        'url_red_social',
+        'portafolio',
+        'curriculum',
+
     ];
 
+    /**
+     * Relación con el graduado (una red profesional pertenece a un graduado)
+     */
     public function graduado(): BelongsTo
     {
         return $this->belongsTo(Graduado::class);

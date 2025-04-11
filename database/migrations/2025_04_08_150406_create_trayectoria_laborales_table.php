@@ -11,22 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
-        Schema::create('estudios', function (Blueprint $table) {
+
+        Schema::create('trayectoria_laborales', function (Blueprint $table) {
             $table->id();
-            $table->string('nivel_estudios');
-            $table->string('programa');
-            $table->string('institucion');
-            $table->string('pais');
+            $table->string('empresa');
+            $table->string('direccion');
+            $table->string('cargo');
+            $table->string('sector_productivo');
             $table->string('ciudad');
+            $table->string('pais');
+            $table->string('area_desempeno');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
-            $table->foreignId('graduado_id');
+            $table->boolean('relacion_formacion');
+            $table->foreignId('graduado_id')->constrained();
             $table->timestamps();
         });
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estudios');
+        Schema::dropIfExists('trayectoria_laborales');
     }
 };

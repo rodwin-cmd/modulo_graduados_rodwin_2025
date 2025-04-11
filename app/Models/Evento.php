@@ -10,17 +10,20 @@ class Evento extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'id' => 'integer',
-        'nombre_evento' => 'string',
-        'descripcion' => 'string',
-        'ciudad_evento' => 'string',
-        'lugar_evento' => 'string',
-        'fecha_evento' => 'date',
+    protected $fillable = [
+        'nombre_evento' ,
+        'descripcion',
+        'ciudad_evento',
+        'departamento_evento',
+        'lugar_evento',
+        'fecha_evento',
+        'graduado_id',
     ];
-
+    /**
+     * Relación con el graduado (un evento pertenece a un graduado)
+     */
     public function graduado(): BelongsTo
     {
-        return $this->belongsTo(Graduado::class, 'graduado_numero_documento', 'numero_documento');
+        return $this->belongsTo(Graduado::class);
     }
 }

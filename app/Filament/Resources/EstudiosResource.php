@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EstudiosResource\Pages;
 use App\Filament\Resources\EstudiosResource\RelationManagers;
-use App\Models\Estudios;
+use App\Models\Estudio;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EstudiosResource extends Resource
 {
-    protected static ?string $model = Estudios::class;
+    protected static ?string $model = Estudio::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
@@ -42,9 +42,7 @@ class EstudiosResource extends Resource
                     ->required(),
                 Forms\Components\DatePicker::make('fecha_fin')
                     ->required(),
-                Forms\Components\Select::make('graduado_id')
-                    ->relationship('graduado', 'id')
-                    ->required(),
+
             ]);
     }
 

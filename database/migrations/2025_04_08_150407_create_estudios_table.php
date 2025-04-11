@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
-
-        Schema::create('ciudads', function (Blueprint $table) {
+        Schema::create('estudios', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->foreignId('departamento_id')->constrained()->cascadeOnDelete();
+            $table->string('nivel_academico');
+            $table->string('programa');
+            $table->string('institucion');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->foreignId('graduado_id')->constrained();
             $table->timestamps();
         });
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ciudads');
+        Schema::dropIfExists('estudios');
     }
 };

@@ -23,9 +23,7 @@ class ProgramaAcademicoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id_programa')
-                    ->required()
-                    ->maxLength(255),
+
                 Forms\Components\TextInput::make('programa')
                     ->required()
                     ->maxLength(255),
@@ -48,8 +46,7 @@ class ProgramaAcademicoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id_programa')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('programa')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('facultad')

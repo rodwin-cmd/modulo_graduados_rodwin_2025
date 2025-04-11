@@ -35,9 +35,7 @@ class RedProfesionalResource extends Resource
                 Forms\Components\TextInput::make('curriculum_url')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('graduado_id')
-                    ->relationship('graduado', 'id')
-                    ->required(),
+
             ]);
     }
 

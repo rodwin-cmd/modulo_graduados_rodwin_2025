@@ -14,15 +14,15 @@ class GraduadoFactory extends Factory
             'nombre' => $this->faker->firstName,
             'apellidos' => $this->faker->lastName,
             'tipo_documento' => $this->faker->randomElement(['CC', 'TI', 'CE']),
-            'numero_documento' => $this->faker->unique()->numberBetween(1000000000, 9999999999),
-            'sexo' => $this->faker->randomElement(['Masculino', 'Femenino', 'Otro']),
-            'fecha_nacimiento' => $this->faker->date('Y-m-d', '-20 years'),
+            'numero_documento' => $this->faker->unique()->numerify('##########'),
+            'sexo' => $this->faker->randomElement(['Masculino', 'Femenino']),
+            'fecha_nacimiento' => $this->faker->date(),
             'correo_personal' => $this->faker->unique()->safeEmail,
             'correo_institucional' => $this->faker->unique()->companyEmail,
             'telefono' => $this->faker->phoneNumber,
             'direccion' => $this->faker->address,
-            'ciudad_id' => Ciudad::inRandomOrder()->first()?->id ?? 1, // Asegúrate que haya ciudades primero
-            'programa_academico_id' => ProgramaAcademico::inRandomOrder()->first()?->id ?? 1, // Igual para programas
+            'ciudad_id' => Ciudad::inRandomOrder()->first()?->id,
+            'programa_academico_id' => ProgramaAcademico::inRandomOrder()->first()?->id,
         ];
     }
 }

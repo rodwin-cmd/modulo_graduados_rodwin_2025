@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
-        Schema::create('departamentos', function (Blueprint $table) {
+
+        Schema::create('red_profesionales', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
+            $table->string('red_social');
+            $table->text('url_red_social');
+            $table->string('portafolio')->nullable();
+            $table->string('curriculum')->nullable();
+            $table->foreignId('graduado_id')->constrained('graduados');
             $table->timestamps();
         });
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departamentos');
+        Schema::dropIfExists('red_profesionales');
     }
 };

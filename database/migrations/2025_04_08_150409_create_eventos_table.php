@@ -11,7 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
 
         Schema::create('eventos', function (Blueprint $table) {
             $table->id();
@@ -20,13 +19,11 @@ return new class extends Migration
             $table->string('ciudad_evento');
             $table->string('departamento_evento');
             $table->string('lugar_evento');
-            $table->string('fecha_evento');
+            $table->dateTime('fecha_evento');
+            $table->foreignId('graduado_id')->constrained();
             $table->timestamps();
         });
-
-        Schema::enableForeignKeyConstraints();
     }
-
     /**
      * Reverse the migrations.
      */

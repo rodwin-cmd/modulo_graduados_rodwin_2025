@@ -47,9 +47,6 @@ class TrayectoriaLaboralResource extends Resource
                     ->required(),
                 Forms\Components\Toggle::make('relacion_formacion')
                     ->required(),
-                Forms\Components\Select::make('graduado_id')
-                    ->relationship('graduado', 'id')
-                    ->required(),
             ]);
     }
 
@@ -77,9 +74,6 @@ class TrayectoriaLaboralResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('relacion_formacion')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('graduado.id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
