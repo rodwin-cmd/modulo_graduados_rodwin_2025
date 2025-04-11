@@ -15,11 +15,11 @@ return new class extends Migration
 
         Schema::create('red_profesionales', function (Blueprint $table) {
             $table->id();
-            $table->string('red_social');
-            $table->text('url_red_social');
+            $table->string('nombre_red');
+            $table->text('perfil_url');
             $table->string('portafolio')->nullable();
             $table->string('curriculum')->nullable();
-            $table->foreignId('graduado_id')->constrained('graduados');
+            $table->foreignId('graduado_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 

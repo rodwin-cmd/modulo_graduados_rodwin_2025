@@ -75,7 +75,7 @@ class Graduado extends Model
     /**
      * Relación con redes profesionales (un graduado puede tener muchas redes)
      */
-    public function redesProfesionales(): HasMany
+    public function redProfesionales(): HasMany
     {
         return $this->hasMany(RedProfesional::class);
     }

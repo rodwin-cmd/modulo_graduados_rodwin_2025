@@ -12,8 +12,8 @@ class RedProfesional extends Model
 
     protected $table = 'red_profesionales';
     protected $fillable = [
-        'red_social',
-        'url_red_social',
+        'nombre_red',
+        'perfil_url',
         'portafolio',
         'curriculum',
 

@@ -157,7 +157,7 @@ class GraduadoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\RedProfesionalesRelationManager::class,
         ];
     }
 
