@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,5 +25,27 @@ class ProgramaAcademico extends Model
     public function graduados(): HasMany
     {
         return $this->hasMany(Graduado::class);
+    }
+
+    public static function getForm() :array
+    {
+        return [
+
+            TextInput::make('programa')
+                ->required()
+                ->maxLength(255),
+            TextInput::make('facultad')
+                ->required()
+                ->maxLength(255),
+            TextInput::make('nivel')
+                ->required()
+                ->maxLength(255),
+            TextInput::make('modalidad')
+                ->required()
+                ->maxLength(255),
+            TextInput::make('codigo_SNIES')
+                ->required()
+                ->numeric(),
+        ];
     }
 }

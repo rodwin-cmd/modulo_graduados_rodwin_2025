@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EventoResource\Pages;
 use App\Filament\Resources\EventoResource\RelationManagers;
 use App\Models\Evento;
+use App\Models\Graduado;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -24,50 +25,17 @@ class EventoResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-
-                Forms\Components\TextInput::make('nombre_evento')
-                    ->label('Nombre del Evento')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('descripcion')
-                    ->required(),
-                Forms\Components\Select::make('departamento_evento')
-                    ->label('Departamento')
-                    ->options(Departamento::all()->pluck('nombre', 'nombre'))
-                    ->reactive()
-                    ->afterStateUpdated(fn (callable $set) => $set('ciudad_evento', null))
-                    ->required(),
-                Forms\Components\Select::make('ciudad_evento')
-                    ->label('Ciudad')
-                    ->options(function (callable $get) {
-                        $departamentoNombre = $get('departamento_evento');
-                        if (!$departamentoNombre) return [];
-
-                        $departamento = Departamento::where('nombre', $departamentoNombre)->first();
-                        return $departamento
-                            ? $departamento->ciudades()->pluck('nombre', 'nombre') // Clave y valor: nombre
-                            : [];
-                    })
-                    ->required(),
-
-                Forms\Components\TextInput::make('lugar_evento')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('fecha_evento')
-                    ->required(),
-
-            ]);
+            ->schema(Evento::getForm());
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-
                 Tables\Columns\TextColumn::make('nombre_evento')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('descripcion'),
+                Tables\Columns\TextColumn::make('descripcion')
+                    ->html(),
                 Tables\Columns\TextColumn::make('ciudad_evento')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('lugar_evento')
@@ -82,6 +50,7 @@ class EventoResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->filters([
                 //

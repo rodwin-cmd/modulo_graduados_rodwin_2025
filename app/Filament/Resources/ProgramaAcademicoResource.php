@@ -10,8 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class ProgramaAcademicoResource extends Resource
 {
@@ -22,24 +21,7 @@ class ProgramaAcademicoResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-
-                Forms\Components\TextInput::make('programa')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('facultad')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('nivel')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('modalidad')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('codigo_SNIES')
-                    ->required()
-                    ->numeric(),
-            ]);
+            ->schema(ProgramaAcademico::getForm());
     }
 
     public static function table(Table $table): Table

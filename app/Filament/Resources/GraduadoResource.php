@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\GraduadoResource\Pages;
 use App\Filament\Resources\GraduadoResource\RelationManagers;
 use App\Models\Graduado;
+use App\Models\ProgramaAcademico;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,82 +19,13 @@ class GraduadoResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
+    // Navigationgroup define el orden que aparece el recurso en el panel
+    protected static ?string $navigationGroup = 'Panel Graduados';
+
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('nombre')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('apellidos')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('tipo_documento')
-                        ->options([
-                            'RC' => 'RC',
-                            'TI' => 'TI',
-                            'CC' => 'CC',
-                            'TE' => 'TE',
-                            'PP' => 'PP',
-                            'PEP' => 'PEP',
-                        ])
-                    ->required(),
-                Forms\Components\TextInput::make('numero_documento')
-                    ->label('Numero de documento')
-                    ->numeric()
-                    ->required(),
-                Forms\Components\TextInput::make('sexo')
-                    ->datalist([
-                        'Hombre',
-                        'Mujer',
-                    ])
-                    ->required(),
-                Forms\Components\DatePicker::make('fecha_nacimiento')
-                    ->required(),
-                Forms\Components\TextInput::make('correo_personal')
-                    ->required()
-                    ->email()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('correo_institucional')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('telefono')
-                    ->tel()
-                    ->required()
-                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
-                Forms\Components\TextInput::make('direccion')
-                    ->required()
-                    ->maxLength(255),
-
-
-                Forms\Components\Select::make('ciudad_id')
-                    ->label('Ciudad residencia')
-                    ->options(function (callable $get) {
-                        $departamentoId = $get('departamento_id');
-
-                        if (!$departamentoId) return [];
-
-                        return \App\Models\Ciudad::where('departamento_id', $departamentoId)
-                            ->pluck('nombre', 'id');
-                    })
-                    ->required()
-                    ->searchable()
-                    ->preload()
-                    ->disabled(fn (callable $get) => !$get('departamento_id')) // Opcional: desactiva hasta que se seleccione departamento
-                    ->reactive(),
-
-                Forms\Components\Select::make('departamento_id')
-                    ->label('Departamento residencia')
-                    ->relationship('departamento', 'nombre')
-                    ->required()
-                    ->reactive(),
-
-                Forms\Components\Select::make('programa_academico_id')
-                    ->relationship('programaAcademico', 'programa')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-            ]);
+            ->schema(Graduado::getForm());
     }
 
     public static function table(Table $table): Table
@@ -161,6 +93,8 @@ class GraduadoResource extends Resource
         ];
     }
 
+
+//    Get pages se define las rutas del Resource
     public static function getPages(): array
     {
         return [

@@ -14,13 +14,12 @@ return new class extends Migration
 
         Schema::create('eventos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_evento');
-            $table->string("descripcion");
+            $table->string('nombre_evento', length: 60);
+            $table->text("descripcion");
             $table->string('ciudad_evento');
             $table->string('departamento_evento');
             $table->string('lugar_evento');
             $table->dateTime('fecha_evento');
-            $table->foreignId('graduado_id')->constrained();
             $table->timestamps();
         });
     }
