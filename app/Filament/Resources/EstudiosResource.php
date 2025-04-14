@@ -10,8 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class EstudiosResource extends Resource
 {
@@ -89,6 +88,12 @@ class EstudiosResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    //oculta el resource de la vista prinicpal
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
     }
 
     public static function getRelations(): array

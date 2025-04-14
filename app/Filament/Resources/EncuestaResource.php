@@ -17,15 +17,19 @@ class EncuestaResource extends Resource
 {
     protected static ?string $model = Encuesta::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+//    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
+    protected static ?string $navigationGroup = 'Panel Administrativo';
+
+    public static function getNavigationBadge(): ?string
+    {
+       return Encuesta::count();
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id_encuesta')
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('nombre')
                     ->required()
                     ->maxLength(255),
@@ -39,9 +43,8 @@ class EncuestaResource extends Resource
                 Forms\Components\TextInput::make('medio_aplicacion')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('graduado_id')
-                    ->relationship('graduado', 'id')
-                    ->required(),
+                Forms\Components\Hidden::make('graduado_id')
+                    ->hidden(),
             ]);
     }
 
@@ -49,8 +52,6 @@ class EncuestaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id_encuesta')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('nombre')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('fecha_aplicacion')
@@ -63,9 +64,7 @@ class EncuestaResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('medio_aplicacion')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('graduado.id')
-                    ->numeric()
-                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

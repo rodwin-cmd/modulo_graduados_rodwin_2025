@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -32,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('asset/images/logoucp.png'))
             ->brandLogoHeight('4rem')
             ->darkModeBrandLogo('asset/images/logoucp.png')
+            ->maxContentWidth('full')
             ->colors([
                 'primary' => Color::Red,
                 'gray'=>Color::Green,
@@ -40,6 +42,11 @@ class AdminPanelProvider extends PanelProvider
             ->favicon('asset/images/ucp.webp')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->sidebarCollapsibleOnDesktop()
+            ->navigationGroups([
+                NavigationGroup::make('Panel Graduados')->icon('heroicon-o-academic-cap'),
+                NavigationGroup::make('Panel Administrativo')->icon('heroicon-o-building-library'),
+            ])
             ->pages([
                 Pages\Dashboard::class,
             ])

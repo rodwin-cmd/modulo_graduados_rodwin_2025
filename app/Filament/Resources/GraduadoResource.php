@@ -8,6 +8,9 @@ use App\Models\Graduado;
 use App\Models\Estudio;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,7 +20,7 @@ class GraduadoResource extends Resource
 {
     protected static ?string $model = Graduado::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+//    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
     // Navigationgroup define el orden que aparece el recurso en el panel
     protected static ?string $navigationGroup = 'Panel Graduados';
@@ -36,37 +39,18 @@ class GraduadoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('apellidos')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tipo_documento')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('numero_documento')
                     ->formatStateUsing(fn ($state) => (string) $state)
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sexo')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('fecha_nacimiento')
-                    ->date()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('correo_personal')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('correo_institucional')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('telefono')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('direccion')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('ciudad.nombre')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('niveles_estudio')
-                    ->label('Niveles de estudio')
-                    ->formatStateUsing(function ($record) {
-                        return $record->estudios
-                            ? $record->estudios->pluck('nivel')->unique()->join(', ')
-                            : '—';
-                    })
-                    ->toggleable()
-                    ->wrap(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -77,10 +61,16 @@ class GraduadoResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('programa')
+                    ->relationship('estudios', 'programa')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->slideOver(),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
@@ -90,7 +80,27 @@ class GraduadoResource extends Resource
             ]);
     }
 
+    // crear vistas personalizadas tipo info list
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Informacion Personal')
+                ->columns(3)
+                ->schema([
+                   TextEntry::make('nombre'),
+                    TextEntry::make('apellidos'),
+                    TextEntry::make('tipo_documento'),
+                    TextEntry::make('numero_documento'),
+                    TextEntry::make('correo_personal'),
+                    TextEntry::make('correo_institucional'),
+                    TextEntry::make('telefono'),
+                    TextEntry::make('direccion'),
+                    TextEntry::make('ciudad.nombre'),
 
+                ])
+            ]);
+    }
 
     public static function getRelations(): array
     {
@@ -106,7 +116,7 @@ class GraduadoResource extends Resource
         return [
             'index' => Pages\ListGraduados::route('/'),
             'create' => Pages\CreateGraduado::route('/create'),
-            'edit' => Pages\EditGraduado::route('/{record}/edit'),
+//            'edit' => Pages\EditGraduado::route('/{record}/edit'),
             'view' => Pages\ViewGraduado::route('/{record}'),
         ];
     }

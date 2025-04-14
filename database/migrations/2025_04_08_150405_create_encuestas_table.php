@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fecha_respuesta');
             $table->string('tipo_encuesta');
             $table->string('medio_aplicacion');
-            $table->foreignId('graduado_id')->constrained()->onDelete('cascade');
+            $table->foreignId('graduado_id')->nullable()->change();
             $table->timestamps();
         });
     }
@@ -28,6 +28,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('encuestas');
+
+        Schema::table('encuestas', function (Blueprint $table) {
+            $table->foreignId('graduado_id')->nullable(false)->change();
+        });
     }
 };

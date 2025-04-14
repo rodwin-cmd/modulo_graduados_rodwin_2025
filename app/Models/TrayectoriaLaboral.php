@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TrayectoriaLaboral extends Model
 {
     use HasFactory;
-
+    protected $table = 'trayectoria_laborales';
     protected $fillable = [
         'empresa',
         'direccion',

@@ -62,6 +62,11 @@ class ProgramaAcademicoResource extends Resource
             ]);
     }
 
+    //oculta el resource de la vista prinicpal
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
     public static function getRelations(): array
     {
         return [

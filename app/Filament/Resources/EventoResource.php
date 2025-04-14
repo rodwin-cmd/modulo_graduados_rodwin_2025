@@ -15,12 +15,22 @@ use App\Models\Departamento;
 use App\Models\Ciudad;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class EventoResource extends Resource
 {
     protected static ?string $model = Evento::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+//    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+
+    protected static ?string $navigationGroup = 'Panel Administrativo';
+
+    //getNavigationBadge crea una insignia en panel admin para mostra al usuario donde puede crear un evento
+    public static function getNavigationBadge(): ?string
+    {
+        return Evento::count();
+    }
+    //Evento::count muestra el número de eventos creados
 
     public static function form(Form $form): Form
     {
@@ -33,8 +43,10 @@ class EventoResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('nombre_evento')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('descripcion')
+                    ->wrap()
                     ->html(),
                 Tables\Columns\TextColumn::make('ciudad_evento')
                     ->searchable(),

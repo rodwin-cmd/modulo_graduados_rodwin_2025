@@ -19,6 +19,7 @@ class RedProfesionalResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
 
+
     public static function form(Form $form): Form
     {
         return $form
@@ -75,7 +76,11 @@ class RedProfesionalResource extends Resource
                 ]),
             ]);
     }
-
+    //oculta el resource de la vista prinicpal
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
     public static function getRelations(): array
     {
         return [
