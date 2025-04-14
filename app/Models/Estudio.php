@@ -11,11 +11,12 @@ class Estudio extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nivel_academico',
+        'nivel_estudios',
         'programa',
         'institucion',
         'fecha_inicio',
         'fecha_fin',
+        'graduado_id',
     ];
 
     /**

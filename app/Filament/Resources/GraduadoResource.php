@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\GraduadoResource\Pages;
 use App\Filament\Resources\GraduadoResource\RelationManagers;
 use App\Models\Graduado;
-use App\Models\ProgramaAcademico;
+use App\Models\Estudio;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -58,9 +58,15 @@ class GraduadoResource extends Resource
                 Tables\Columns\TextColumn::make('ciudad.nombre')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('programaAcademico.programa')
-                    ->searchable()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('niveles_estudio')
+                    ->label('Niveles de estudio')
+                    ->formatStateUsing(function ($record) {
+                        return $record->estudios
+                            ? $record->estudios->pluck('nivel')->unique()->join(', ')
+                            : '—';
+                    })
+                    ->toggleable()
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -89,7 +95,7 @@ class GraduadoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\RedProfesionalesRelationManager::class,
+            //
         ];
     }
 

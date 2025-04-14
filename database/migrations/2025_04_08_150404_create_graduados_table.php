@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('direccion');
             $table->foreignId('ciudad_id')->constrained('ciudades');
             $table->foreignId('departamento_id')->constrained();
-            $table->foreignId('programa_academico_id')->constrained('programa_academicos');
             $table->timestamps();
         });
 

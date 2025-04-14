@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('estudios', function (Blueprint $table) {
             $table->id();
-            $table->string('nivel_academico');
+            $table->string('nivel_estudios');
             $table->string('programa');
             $table->string('institucion');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
-            $table->foreignId('graduado_id')->constrained();
+            $table->foreignId('graduado_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 
