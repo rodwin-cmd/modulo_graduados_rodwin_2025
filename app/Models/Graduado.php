@@ -7,6 +7,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -94,14 +95,14 @@ class Graduado extends Model
     }
 
     // clase estática get form se utiliza para reutilizar el form en otras instacias
-    //Tabs es un componente de filament que organiza la informcion en listas visuales
+    //Tabs es un componente de filament que organiza la información en listas visuales
     public static function getForm(): array
     {
         return [
             Tabs::make('Formulario de Graduado')
                 ->columnSpanFull()
                 ->tabs([
-                    Tabs\Tab::make('Datos personales')
+                    Tabs\Tab::make('Datos Personales')
                         ->icon('heroicon-o-user')
                         ->columns(2)
                         ->schema([
@@ -135,12 +136,6 @@ class Graduado extends Model
                                 ->required(),
                             DatePicker::make('fecha_nacimiento')
                                 ->required(),
-                        ]),
-
-                    Tabs\Tab::make('Contacto')
-                        ->icon('heroicon-o-phone')
-                        ->columns(3)
-                        ->schema([
                             TextInput::make('correo_personal')
                                 ->required()
                                 ->email()
@@ -152,12 +147,6 @@ class Graduado extends Model
                                 ->tel()
                                 ->required()
                                 ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
-                        ]),
-
-                    Tabs\Tab::make('Ubicación')
-                        ->icon('heroicon-o-map')
-                        ->columns(3)
-                        ->schema([
                             TextInput::make('direccion')
                                 ->required()
                                 ->maxLength(255),
@@ -180,46 +169,81 @@ class Graduado extends Model
                                 ->disabled(fn (callable $get) => !$get('departamento_id'))
                                 ->reactive(),
                         ]),
-                    Tabs\Tab::make('Estudios Académicos')
-                        ->icon('heroicon-o-academic-cap')
-                        ->columns(2)
-                        ->schema([
-                            Repeater::make('estudios')
-                                ->columnSpanFull()
-                                ->label('Estudios académicos')
-                                ->relationship()
-                                ->schema([
-                                    Select::make('nivel_estudios')
-                                        ->options([
-                                            'Curso' => 'Curso',
-                                            'Diplomado' => 'Diplomado',
-                                            'Técnico' => 'Técnico',
-                                            'Tecnología' => 'Tecnología',
-                                            'Pregrado' => 'Pregrado',
-                                            'Especialización' => 'Especialización',
-                                            'Maestría' => 'Maestría',
-                                            'Doctorado' => 'Doctorado',
-                                        ])
-                                        ->required()
-                                        ->label('Nivel de estudio'),
 
-                                    TextInput::make('programa')
-                                        ->required()
-                                        ->maxLength(255)
-                                        ->label('Nombre del programa'),
+//                    Estudios académicos
 
-                                    TextInput::make('institucion')
-                                        ->maxLength(255)
-                                        ->label('Universidad o centro formativo'),
+                        Tabs\Tab::make('Estudios Académicos')
+                            ->icon('heroicon-o-academic-cap')
+                            ->columns(2)
+                            ->schema([
+                                Repeater::make('estudios')
+                                    ->columnSpanFull()
+                                    ->label('Estudios académicos')
+                                    ->relationship()
+                                    ->schema([
+                                        Select::make('nivel_estudios')
+                                            ->options([
+                                                'Curso' => 'Curso',
+                                                'Diplomado' => 'Diplomado',
+                                                'Técnico' => 'Técnico',
+                                                'Tecnología' => 'Tecnología',
+                                                'Pregrado' => 'Pregrado',
+                                                'Especialización' => 'Especialización',
+                                                'Maestría' => 'Maestría',
+                                                'Doctorado' => 'Doctorado',
+                                            ])
+                                            ->required()
+                                            ->label('Nivel de estudio'),
 
-                                    DatePicker::make('fecha_inicio')->label('Fecha de inicio'),
-                                    DatePicker::make('fecha_fin')->label('Fecha de finalización'),
-                                ])
-                                ->columns(2), // Puedes ajustar las columnas si es necesario
+                                        TextInput::make('programa')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->label('Nombre del programa'),
+
+                                        TextInput::make('institucion')
+                                            ->maxLength(255)
+                                            ->label('Universidad o centro formativo'),
+
+                                        DatePicker::make('fecha_inicio')->label('Fecha de inicio'),
+                                        DatePicker::make('fecha_fin')->label('Fecha de finalización'),
+                                    ])
+                                    ->columns(2), // ajustar las columnas si es necesario
+                            ]),
+                        Tabs\Tab::make('Experiencia Laboral')
+                            ->icon('heroicon-o-building-office-2')
+                            ->columns(2)
+                            ->schema([
+                                Repeater::make('trayectoriasLaborales')
+                                    ->columnSpanFull()
+                                ->relationship('trayectoriasLaborales')
+                                ->label('Experiencias Laborales')
+                                    ->columns(2)
+                                    ->schema([
+                                        TextInput::make('empresa')->required(),
+                                        TextInput::make('direccion')->required(),
+                                        TextInput::make('cargo')->required(),
+                                        TextInput::make('sector_productivo'),
+                                        TextInput::make('ciudad')->required(),
+                                        TextInput::make('pais')->required(),
+                                        TextInput::make('area_desempeno')->required(),
+                                        DatePicker::make('fecha_inicio')->required(),
+                                        DatePicker::make('fecha_fin')->required(),
+                                        Toggle::make('relacion_formacion')
+                                            ->label('Experiencia relacionada con perfil')
+                                            ->required(),
+                                    ]),
+                            ]),
+                        Tabs\Tab::make('Red profesional')
+                            ->icon('heroicon-o-globe-alt')
+                            ->columns(2)
+                            ->schema([
                         ]),
-
-                ]),
-
+                         Tabs\Tab::make('Reconocimientos')
+                            ->icon('heroicon-o-trophy')
+                            ->columns(2)
+                            ->schema([
+                        ]),
+            ]),
         ];
 
     }
