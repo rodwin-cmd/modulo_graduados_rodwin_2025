@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
             $table->boolean('relacion_formacion');
-            $table->foreignId('graduado_id')->constrained();
+            $table->foreignId('graduado_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 

@@ -30,16 +30,16 @@ class AdminPanelProvider extends PanelProvider
             ->id('dashboard')
             ->path('dashboard')
             ->login()
-            ->brandLogo(asset('asset/images/logoucp.png'))
+            ->brandLogo(asset('assets/images/logoucp.png'))
             ->brandLogoHeight('4rem')
-            ->darkModeBrandLogo('asset/images/logoucp.png')
+            ->darkModeBrandLogo(asset('assets/images/logoucp.png'))
             ->maxContentWidth('full')
             ->colors([
                 'primary' => Color::Red,
-                'gray'=>Color::Green,
+                'gray'=>Color::hex('#66cc99'),
             ])
             ->font('Poppins')
-            ->favicon('asset/images/ucp.webp')
+            ->favicon('assets/images/ucp.webp')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->sidebarCollapsibleOnDesktop()
@@ -51,10 +51,6 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

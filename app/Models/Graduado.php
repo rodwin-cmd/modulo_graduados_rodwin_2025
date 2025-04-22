@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,12 +35,10 @@ class Graduado extends Model
         'ciudad_id',
         'departamento_id',
         'programa_academico_id',
+        'avatar'
 
     ];
 
-    protected $casts = [
-        'fecha_nacimiento' => 'date',
-    ];
 
     /**
      * Relación con la ciudad (muchos graduados pertenecen a una ciudad)
@@ -89,9 +89,16 @@ class Graduado extends Model
     /**
      * Relación con la trayectoria laboral (un graduado puede tener muchas trayectorias laborales)
      */
-    public function trayectoriasLaborales()
+    public function trayectoriasLaborales():HasMany
     {
         return $this->hasMany(TrayectoriaLaboral::class);
+    }
+    /**
+     * Relación con reconocimientos (un graduado puede tener muchos reconocimientos)
+     */
+    public function reconocimientos():HasMany
+    {
+        return $this->hasMany(Reconocimiento::class);
     }
 
     // clase estática get form se utiliza para reutilizar el form en otras instacias
@@ -104,7 +111,7 @@ class Graduado extends Model
                 ->tabs([
                     Tabs\Tab::make('Datos Personales')
                         ->icon('heroicon-o-user')
-                        ->columns(2)
+                        ->columns(3)
                         ->schema([
                             TextInput::make('nombre')
                                 ->label('Nombre del graduado')
@@ -128,10 +135,11 @@ class Graduado extends Model
                                 ->numeric()
                                 ->unique(ignoreRecord: true)
                                 ->required(),
-                            TextInput::make('sexo')
-                                ->datalist([
-                                    'Hombre',
-                                    'Mujer',
+                            Select::make('sexo')
+                                ->options([
+                                    'Hombre' => 'Hombre',
+                                    'Mujer' => 'Mujer',
+                                    'Otro' => 'Otro',
                                 ])
                                 ->required(),
                             DatePicker::make('fecha_nacimiento')
@@ -209,6 +217,8 @@ class Graduado extends Model
                                     ])
                                     ->columns(2), // ajustar las columnas si es necesario
                             ]),
+
+                        // Experiencia Laboral
                         Tabs\Tab::make('Experiencia Laboral')
                             ->icon('heroicon-o-building-office-2')
                             ->columns(2)
@@ -233,15 +243,67 @@ class Graduado extends Model
                                             ->required(),
                                     ]),
                             ]),
+
+                        //RED PROFESIONALES
                         Tabs\Tab::make('Red profesional')
                             ->icon('heroicon-o-globe-alt')
-                            ->columns(2)
                             ->schema([
+                                Repeater::make('redprofesionales')
+                                    ->columns(3)
+                                ->relationship('redprofesionales')
+                                ->label('Redes profesionales')
+                                    ->columns(3)
+                                    ->schema([
+                                        Select::make('nombre_red')
+                                            ->options([
+                                                'LinkedIn' => 'LinkedIn',
+                                                'Facebook' => 'Facebook',
+                                                'Instagram' => 'Instagram',
+                                                'You Tube' => 'You Tube',
+                                                'X' => 'X',
+                                                'Git Hub' => 'Git Hub',
+                                                'Threads' => 'Threads',
+                                            ])
+                                            ->required()
+                                            ->label('Redes Sociales / Profesionales'),
+                                        TextInput::make('perfil_url')->required()
+                                            ->url()
+                                            ->suffixIcon('heroicon-m-globe-alt')
+                                            ->suffixIconColor('success'),
+//                                        TextInput::make('portafolio')->nullable()
+//                                        ->label('Sube tu portafolio en formato PDF'),
+//                                        TextInput::make('curriculum')->nullable()
+//                                        ->label('Sube tu curriculum en formato PDF'),
+                                    ])
                         ]),
+
+                         //RECONOCIMIENTOS
                          Tabs\Tab::make('Reconocimientos')
                             ->icon('heroicon-o-trophy')
                             ->columns(2)
                             ->schema([
+                                Repeater::make('reconocimientos')
+                                    ->relationship() // usa la relación hasMany automáticamente
+                                    ->label('Reconocimientos')
+                                    ->schema([
+                                        Select::make('tipo')
+                                            ->label('Tipo de reconocimiento')
+                                            ->options([
+                                                'Académico' => 'Académico',
+                                                'Empresarial' => 'Empresarial',
+                                            ])
+                                            ->required(),
+                                        TextInput::make('titulo')->required(),
+
+                                        Textarea::make('descripcion')->rows(3),
+
+                                        TextInput::make('entidad_otorgante')->required(),
+
+                                        DatePicker::make('fecha')->required(),
+
+                                    ])
+                                    ->columns(2)
+                                    ->label('Agregar reconocimiento')
                         ]),
             ]),
         ];

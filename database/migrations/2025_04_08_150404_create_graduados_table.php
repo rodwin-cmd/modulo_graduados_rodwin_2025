@@ -26,7 +26,9 @@ return new class extends Migration
             $table->string('direccion');
             $table->foreignId('ciudad_id')->constrained('ciudades');
             $table->foreignId('departamento_id')->constrained();
-
+            $table->string('nombre_contacto')->nullable();
+            $table->string('telefono_contacto')->nullable();
+            $table->
             $table->timestamps();
         });
 

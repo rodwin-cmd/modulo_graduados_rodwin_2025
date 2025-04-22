@@ -37,6 +37,6 @@ class GraduadoSeeder extends Seeder
                     ]);
             });
 
-        $this->command->info('50 graduados con estudios creados exitosamente.');
+        $this->command->info('10 graduados con estudios creados exitosamente.');
     }
 }

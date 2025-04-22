@@ -4,13 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GraduadoResource\Pages;
 use App\Filament\Resources\GraduadoResource\RelationManagers;
+use App\Filament\Resources\GraduadoResource\Widgets\NumberAllGraduateWidget;
 use App\Models\Graduado;
-use App\Models\Estudio;
-use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -33,11 +29,24 @@ class GraduadoResource extends Resource
 
     public static function table(Table $table): Table
     {
+
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('avatar')
+                    ->label('avatar')
+                    ->circular()
+                    ->getStateUsing(function ($record) {
+                        if ($record->avatar) {
+                            return asset('storage/' . $record->avatar);
+                        }
+                        // Fallback si no hay imagen
+                        return 'https://ui-avatars.com/api/?name=' . urlencode($record->nombre . ' ' . $record->apellidos) . '&background=random&color=fff';
+                    }),
                 Tables\Columns\TextColumn::make('nombre')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('apellidos')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('numero_documento')
                     ->formatStateUsing(fn ($state) => (string) $state)
@@ -51,6 +60,7 @@ class GraduadoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('telefono')
                     ->searchable(),
+                Tables\Columns\ToggleColumn::make('tiene_empleo'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -69,8 +79,8 @@ class GraduadoResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                ->slideOver(),
+//                Tables\Actions\EditAction::make()
+//                ->slideOver(),
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
@@ -80,32 +90,21 @@ class GraduadoResource extends Resource
             ]);
     }
 
-    // crear vistas personalizadas tipo info list
-    public static function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                Section::make('Informacion Personal')
-                ->columns(3)
-                ->schema([
-                   TextEntry::make('nombre'),
-                    TextEntry::make('apellidos'),
-                    TextEntry::make('tipo_documento'),
-                    TextEntry::make('numero_documento'),
-                    TextEntry::make('correo_personal'),
-                    TextEntry::make('correo_institucional'),
-                    TextEntry::make('telefono'),
-                    TextEntry::make('direccion'),
-                    TextEntry::make('ciudad.nombre'),
 
-                ])
-            ]);
-    }
 
     public static function getRelations(): array
     {
         return [
             //
+        ];
+    }
+
+    // con getWidgets se define los widgets que se muestran en el panel
+    // en este caso se muestra el widget que muestra el numero de graduados
+    public static function getWidgets(): array
+    {
+        return [
+            NumberAllGraduateWidget::class,
         ];
     }
 
