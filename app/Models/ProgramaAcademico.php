@@ -5,6 +5,7 @@ namespace App\Models;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProgramaAcademico extends Model
@@ -13,7 +14,7 @@ class ProgramaAcademico extends Model
 
     protected $fillable = [
         'programa',
-        'facultad',
+        'facultad_id',
         'nivel',
         'modalidad',
         'codigo_SNIES',
@@ -26,7 +27,13 @@ class ProgramaAcademico extends Model
     {
         return $this->hasMany(Graduado::class);
     }
-
+    /**
+     * Relación con los facultad (un programa académico pertenece a una facultad)
+     */
+    public function facultad():BelongsTo
+    {
+        return $this->belongsTo(Facultad::class);
+    }
     public static function getForm() :array
     {
         return [
@@ -44,7 +51,6 @@ class ProgramaAcademico extends Model
                 ->required()
                 ->maxLength(255),
             TextInput::make('codigo_SNIES')
-                ->required()
                 ->numeric(),
         ];
     }

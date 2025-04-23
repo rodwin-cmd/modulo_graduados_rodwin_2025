@@ -35,7 +35,7 @@ class TrayectoriaLaboralResource extends Resource
                 Forms\Components\TextInput::make('ciudad')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('pais')
+                Forms\Components\TextInput::make('departamento')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('area_desempeno')
@@ -62,7 +62,7 @@ class TrayectoriaLaboralResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ciudad')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('pais')
+                Tables\Columns\TextColumn::make('departamento')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('area_desempeno')
                     ->searchable(),

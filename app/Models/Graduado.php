@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
+
 class Graduado extends Model
 {
     use HasFactory;
@@ -101,6 +102,18 @@ class Graduado extends Model
         return $this->hasMany(Reconocimiento::class);
     }
 
+
+    public function facultad():BelongsTo
+    {
+        return $this->belongsTo(Facultad::class); // Relación con Facultad
+    }
+
+    public function programaAcademico(): BelongsTo
+    {
+        return $this->belongsTo(ProgramaAcademico::class, 'programa_id');;
+    }
+
+
     // clase estática get form se utiliza para reutilizar el form en otras instacias
     //Tabs es un componente de filament que organiza la información en listas visuales
     public static function getForm(): array
@@ -121,6 +134,7 @@ class Graduado extends Model
                                 ->required()
                                 ->maxLength(255),
                             Select::make('tipo_documento')
+                                ->label('Tipo de documento')
                                 ->options([
                                     'RC' => 'RC',
                                     'TI' => 'TI',
@@ -143,28 +157,33 @@ class Graduado extends Model
                                 ])
                                 ->required(),
                             DatePicker::make('fecha_nacimiento')
+                                ->label('Fecha de Nacimiento')
                                 ->required(),
                             TextInput::make('correo_personal')
+                                ->label('Correo Personal')
                                 ->required()
                                 ->email()
                                 ->maxLength(255),
                             TextInput::make('correo_institucional')
+                                ->label('Correo Institucional')
                                 ->required()
                                 ->maxLength(255),
                             TextInput::make('telefono')
+                                ->label('Teléfono')
                                 ->tel()
                                 ->required()
                                 ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                             TextInput::make('direccion')
+                                ->label('Dirección')
                                 ->required()
                                 ->maxLength(255),
                             Select::make('departamento_id')
-                                ->label('Departamento residencia')
+                                ->label('Departamento Residencia')
                                 ->relationship('departamento', 'nombre')
                                 ->required()
                                 ->reactive(),
                             Select::make('ciudad_id')
-                                ->label('Ciudad residencia')
+                                ->label('Ciudad Residencia')
                                 ->options(function (callable $get) {
                                     $departamentoId = $get('departamento_id');
                                     if (!$departamentoId) return [];
@@ -186,7 +205,7 @@ class Graduado extends Model
                             ->schema([
                                 Repeater::make('estudios')
                                     ->columnSpanFull()
-                                    ->label('Estudios académicos')
+                                    ->label('Estudios Académicos')
                                     ->relationship()
                                     ->schema([
                                         Select::make('nivel_estudios')
@@ -201,19 +220,33 @@ class Graduado extends Model
                                                 'Doctorado' => 'Doctorado',
                                             ])
                                             ->required()
-                                            ->label('Nivel de estudio'),
+                                            ->label('Nivel de Estudios'),
 
-                                        TextInput::make('programa')
-                                            ->required()
-                                            ->maxLength(255)
-                                            ->label('Nombre del programa'),
+                                        Select::make('facultad_id')
+                                            ->label('Facultad')
+                                            ->options(\App\Models\Facultad::pluck('nombre', 'id'))
+                                            ->reactive()
+                                            ->afterStateUpdated(function (callable $set, $state) {
+                                                $programas = \App\Models\ProgramaAcademico::where('facultad_id', $state)->pluck('programa', 'id')->toArray();
+                                                $set('programa_id', null); // limpia el campo anterior
+                                                $set('programaOptions', $programas); // crea un estado temporal para las opciones
+                                            }),
 
+                                        Select::make('programa_id')
+                                            ->label('Programa Académico')
+                                            ->options(function (callable $get) {
+                                                $facultadId = $get('facultad_id');
+                                                if (!$facultadId) return [];
+                                                return \App\Models\ProgramaAcademico::where('facultad_id', $facultadId)
+                                                    ->pluck('programa', 'id');
+                                            })
+                                        ->reactive(),
                                         TextInput::make('institucion')
                                             ->maxLength(255)
-                                            ->label('Universidad o centro formativo'),
+                                            ->label('Universidad o Centro Formativo'),
 
-                                        DatePicker::make('fecha_inicio')->label('Fecha de inicio'),
-                                        DatePicker::make('fecha_fin')->label('Fecha de finalización'),
+                                        DatePicker::make('fecha_inicio')->label('Fecha de Inicio'),
+                                        DatePicker::make('fecha_fin')->label('Fecha de Finalización'),
                                     ])
                                     ->columns(2), // ajustar las columnas si es necesario
                             ]),
@@ -233,13 +266,27 @@ class Graduado extends Model
                                         TextInput::make('direccion')->required(),
                                         TextInput::make('cargo')->required(),
                                         TextInput::make('sector_productivo'),
-                                        TextInput::make('ciudad')->required(),
-                                        TextInput::make('pais')->required(),
-                                        TextInput::make('area_desempeno')->required(),
+                                        TextInput::make('area_desempeno')
+                                            ->label('Area Desempeño')
+                                            ->required(),
+                                        Select::make('departamento_id')
+                                            ->label('Departamento Residencia')
+                                            ->relationship('departamento', 'nombre')
+                                            ->reactive()
+                                            ->afterStateUpdated(fn (callable $set) => $set('ciudad_id', null)),
+                                        Select::make('ciudad_id')
+                                            ->label('Ciudad Residencia')
+                                            ->options(fn (callable $get) =>
+                                            \App\Models\Ciudad::where('departamento_id', $get('departamento_id'))
+                                                ->pluck('nombre', 'id')
+                                            )
+                                            ->required()
+                                            ->disabled(fn (callable $get) => !$get('departamento_id'))
+                                            ->reactive(),
                                         DatePicker::make('fecha_inicio')->required(),
                                         DatePicker::make('fecha_fin')->required(),
                                         Toggle::make('relacion_formacion')
-                                            ->label('Experiencia relacionada con perfil')
+                                            ->label('Experiencia Relacionada con Perfil')
                                             ->required(),
                                     ]),
                             ]),
@@ -287,7 +334,7 @@ class Graduado extends Model
                                     ->label('Reconocimientos')
                                     ->schema([
                                         Select::make('tipo')
-                                            ->label('Tipo de reconocimiento')
+                                            ->label('Tipo de Reconocimiento')
                                             ->options([
                                                 'Académico' => 'Académico',
                                                 'Empresarial' => 'Empresarial',
@@ -297,9 +344,13 @@ class Graduado extends Model
 
                                         Textarea::make('descripcion')->rows(3),
 
-                                        TextInput::make('entidad_otorgante')->required(),
+                                        TextInput::make('entidad_otorgante')
+                                            ->label('Entidad Otorgante')
+                                            ->required(),
 
-                                        DatePicker::make('fecha')->required(),
+                                        DatePicker::make('fecha')
+                                            ->label('Fecha de Otorgamiento')
+                                            ->required(),
 
                                     ])
                                     ->columns(2)

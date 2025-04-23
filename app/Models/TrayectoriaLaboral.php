@@ -15,8 +15,8 @@ class TrayectoriaLaboral extends Model
         'direccion',
         'cargo',
         'sector_productivo',
-        'ciudad',
-        'pais',
+        'ciudad_id',
+        'departamento_id',
         'area_desempeno',
         'fecha_inicio',
         'fecha_fin',
@@ -37,5 +37,15 @@ class TrayectoriaLaboral extends Model
     public function graduado(): BelongsTo
     {
         return $this->belongsTo(Graduado::class);
+    }
+
+    public function departamento():BelongsTo
+    {
+        return $this->belongsTo(Departamento::class);
+    }
+
+    public function ciudad():BelongsTo
+    {
+        return $this->belongsTo(Ciudad::class);
     }
 }

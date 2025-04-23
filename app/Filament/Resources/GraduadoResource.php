@@ -5,7 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\GraduadoResource\Pages;
 use App\Filament\Resources\GraduadoResource\RelationManagers;
 use App\Filament\Resources\GraduadoResource\Widgets\NumberAllGraduateWidget;
+use App\Models\Facultad;
 use App\Models\Graduado;
+use App\Models\ProgramaAcademico;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -33,7 +36,7 @@ class GraduadoResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar')
-                    ->label('avatar')
+                    ->label('Avatar')
                     ->circular()
                     ->getStateUsing(function ($record) {
                         if ($record->avatar) {
@@ -49,18 +52,23 @@ class GraduadoResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('numero_documento')
+                    ->label('Número de documento')
                     ->formatStateUsing(fn ($state) => (string) $state)
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sexo')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('correo_personal')
+                    ->label('Correo Personal')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('correo_institucional')
+                    ->label('Correo Institucional')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('telefono')
+                    ->label('Teléfono')
                     ->searchable(),
-                Tables\Columns\ToggleColumn::make('tiene_empleo'),
+                Tables\Columns\ToggleColumn::make('tiene_empleo')
+                    ->label('¿Tiene empleo?'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -70,12 +78,37 @@ class GraduadoResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+
+            //filters se define los filtros que se muestran en la tabla
             ->filters([
-                Tables\Filters\SelectFilter::make('programa')
-                    ->relationship('estudios', 'programa')
-                    ->multiple()
-                    ->searchable()
-                    ->preload()
+                Tables\Filters\Filter::make('Facultad y Programa')
+                    ->form([
+                        Select::make('facultad_id')
+                            ->label('Facultad')
+                            ->options(Facultad::pluck('nombre', 'id')->toArray())
+                            ->reactive(), // para actualizar dinámicamente
+
+                        Select::make('programa_id')
+                            ->label('Programa Académico')
+                            ->options(function (callable $get) {
+                                $facultadId = $get('facultad_id');
+                                if (!$facultadId) return [];
+
+                                return ProgramaAcademico::where('facultad_id', $facultadId)
+                                    ->pluck('nombre', 'id');
+                            }),
+                    ])
+                    ->query(function ($query, array $data) {
+                        if ($data['programa_id']) {
+                            $query->where('programa_id', $data['programa_id']);
+                        }
+                        if ($data['facultad_id']) {
+                            // Usamos la relación para filtrar por facultad
+                            $query->whereHas('facultad', function ($q) use ($data) {
+                                $q->where('id', $data['facultad_id']);
+                            });
+                        }
+                    }),
 
             ])
             ->actions([

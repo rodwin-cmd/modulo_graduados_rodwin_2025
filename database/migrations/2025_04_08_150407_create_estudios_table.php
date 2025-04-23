@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('estudios', function (Blueprint $table) {
             $table->id();
             $table->string('nivel_estudios');
-            $table->string('programa');
+            $table->foreignId('programa_id')->nullable()->constrained('programa_academicos')->onDelete('set null');;
             $table->string('institucion');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');

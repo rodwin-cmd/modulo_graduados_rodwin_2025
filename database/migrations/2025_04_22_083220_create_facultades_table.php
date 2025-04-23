@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        Schema::create('programa_academicos', function (Blueprint $table) {
+        Schema::create('facultades', function (Blueprint $table) {
             $table->id();
-            $table->string('programa');
-            $table->string('facultad');
-            $table->string('nivel');
-            $table->string('modalidad');
-            $table->integer('codigo_SNIES')->unique();
+            $table->string('nombre');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('programa_academicos');
+        Schema::dropIfExists('facultades');
     }
 };

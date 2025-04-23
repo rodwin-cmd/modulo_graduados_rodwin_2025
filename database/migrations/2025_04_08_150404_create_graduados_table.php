@@ -28,7 +28,6 @@ return new class extends Migration
             $table->foreignId('departamento_id')->constrained();
             $table->string('nombre_contacto')->nullable();
             $table->string('telefono_contacto')->nullable();
-            $table->
             $table->timestamps();
         });
 

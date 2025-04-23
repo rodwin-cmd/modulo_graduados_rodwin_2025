@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('cargo');
             $table->string('sector_productivo');
-            $table->string('ciudad');
-            $table->string('pais');
+            $table->string('ciudad_id');
+            $table->string('departamento_id');
             $table->string('area_desempeno');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
