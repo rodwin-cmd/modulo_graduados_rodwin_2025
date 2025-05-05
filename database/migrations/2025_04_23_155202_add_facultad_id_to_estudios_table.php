@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('facultades', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre');
-            $table->timestamps();
+        Schema::table('estudios', function (Blueprint $table) {
+            $table->foreignId('facultad_id')->nullable()->constrained('facultades')->nullOnDelete();
         });
     }
 
@@ -23,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('facultades');
+        Schema::table('estudios', function (Blueprint $table) {
+            $table->dropForeign(['facultad_id']);
+            $table->dropColumn('facultad_id');
+        });
     }
 };

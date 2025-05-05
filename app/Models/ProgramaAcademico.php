@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,7 +29,7 @@ class ProgramaAcademico extends Model
         return $this->hasMany(Graduado::class);
     }
     /**
-     * Relación con los facultad (un programa académico pertenece a una facultad)
+     * Relación con las facultades (un programa académico pertenece a una facultad)
      */
     public function facultad():BelongsTo
     {
@@ -39,17 +40,37 @@ class ProgramaAcademico extends Model
         return [
 
             TextInput::make('programa')
+                ->label('Nombre del Nuevo Programa Académico')
                 ->required()
-                ->maxLength(255),
-            TextInput::make('facultad')
+                ->maxLength(100),
+            Select::make('facultad_id')
+                ->label('Facultad')
                 ->required()
-                ->maxLength(255),
-            TextInput::make('nivel')
+                ->relationship('facultad', 'nombre')
+                ->editOptionForm(Facultad::getForm())
+                ,
+            Select::make('nivel')
                 ->required()
-                ->maxLength(255),
-            TextInput::make('modalidad')
+                ->options([
+                    'Técnica' => 'Técnica',
+                    'Tecnología' => 'Tecnología',
+                    'Pregrado'=> 'Pregrado',
+                    'Postgrado'=> 'Postgrado',
+                    'Especialización'=> 'Especialización',
+                    'Maestría' => 'Maestría',
+                    'Doctorado' => 'Doctorado',
+                ])
+                ,
+            Select::make('modalidad')
+                ->hint('Especifique si es virtual, presencial o ambos (ej: Virtual, Presencial, Virtual y Presencial)')
+                ->label('Modalidad')
                 ->required()
-                ->maxLength(255),
+                ->options([
+                    'Virtual' => 'Virtual',
+                    'Presencial' => 'Presencial',
+                    'Virtual y Presencial' => 'Virtual y Presencial',
+                ])
+                ,
             TextInput::make('codigo_SNIES')
                 ->numeric(),
         ];

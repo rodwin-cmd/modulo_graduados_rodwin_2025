@@ -110,7 +110,7 @@ class Graduado extends Model
 
     public function programaAcademico(): BelongsTo
     {
-        return $this->belongsTo(ProgramaAcademico::class, 'programa_id');;
+        return $this->belongsTo(ProgramaAcademico::class, 'programa_academico_id');
     }
 
 
@@ -124,8 +124,11 @@ class Graduado extends Model
                 ->tabs([
                     Tabs\Tab::make('Datos Personales')
                         ->icon('heroicon-o-user')
-                        ->columns(3)
+                        ->columns(2)
                         ->schema([
+                            FileUpload::make('avatar')
+                                ->image()
+                                ->avatar(),
                             TextInput::make('nombre')
                                 ->label('Nombre del graduado')
                                 ->required()

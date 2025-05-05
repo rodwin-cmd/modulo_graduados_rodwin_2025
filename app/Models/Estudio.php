@@ -17,6 +17,7 @@ class Estudio extends Model
         'fecha_inicio',
         'fecha_fin',
         'graduado_id',
+        'facultad_id'
     ];
 
     /**
@@ -26,4 +27,14 @@ class Estudio extends Model
     {
         return $this->belongsTo(Graduado::class);
     }
+
+    /**
+     * Relación con facultad (un estudio pertenece a una facultad)
+     */
+    public function facultad(): BelongsTo
+    {
+        return $this->belongsTo(Facultad::class);
+    }
+
+
 }

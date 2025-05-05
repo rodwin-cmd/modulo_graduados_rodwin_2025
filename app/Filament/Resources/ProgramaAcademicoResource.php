@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProgramaAcademicoResource\Pages;
 use App\Filament\Resources\ProgramaAcademicoResource\RelationManagers;
 use App\Models\ProgramaAcademico;
+use App\Models\Facultad;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,9 +16,10 @@ use Filament\Tables\Table;
 class ProgramaAcademicoResource extends Resource
 {
     protected static ?string $model = ProgramaAcademico::class;
-
+    // clase $navigationIcon, muestra el icono en el panel de navegacion
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
-
+    //Clase $navigationGroup, muestra el grupo en el panel de navegacion
+    protected static ?string $navigationGroup = 'Panel Administrativo';
     public static function form(Form $form): Form
     {
         return $form
@@ -30,10 +32,15 @@ class ProgramaAcademicoResource extends Resource
             ->columns([
 
                 Tables\Columns\TextColumn::make('programa')
+                    ->label('Nombre Programa')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('facultad')
+                Tables\Columns\TextColumn::make('facultad.nombre')
+                    ->label('Nombre de la Facultad')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nivel')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('modalidad')
                     ->searchable(),
@@ -50,7 +57,9 @@ class ProgramaAcademicoResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                // FILTRO DINAMICOS EN TABLE PROGRAMAS ACADEMICOS
+                tables\Filters\SelectFilter::make('facultad')
+                    ->relationship('facultad', 'nombre'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -62,10 +71,10 @@ class ProgramaAcademicoResource extends Resource
             ]);
     }
 
-    //oculta el resource de la vista prinicpal
+    //oculta o muestra  el resource de la vista prinicpal
     public static function shouldRegisterNavigation(): bool
     {
-        return false;
+        return true;
     }
     public static function getRelations(): array
     {

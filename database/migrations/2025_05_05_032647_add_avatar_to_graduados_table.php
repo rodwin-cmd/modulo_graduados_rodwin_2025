@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('graduados', function (Blueprint $table) {
-            $table->string('nombre_contacto')->nullable()->after('correo_institucional');
-            $table->string('telefono_contacto')->nullable()->after('nombre_contacto');
+            $table->string('avatar')->nullable()->after('programa_academico_id');
         });
     }
 
@@ -23,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('graduados', function (Blueprint $table) {
-            $table->dropColumn(['nombre_contacto', 'telefono_contacto']);
+            //
         });
     }
 };

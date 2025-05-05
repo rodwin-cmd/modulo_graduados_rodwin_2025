@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('tipo_documento');
             $table->string('sexo');
             $table->date('fecha_nacimiento');
+            $table->boolean('tiene_empleo')->nullable();
             $table->string('correo_personal', 100);
             $table->string('correo_institucional', 100);
             $table->string('telefono', 20);
