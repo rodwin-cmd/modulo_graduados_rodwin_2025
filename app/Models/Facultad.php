@@ -29,4 +29,10 @@ class Facultad extends Model
                 ->label('Codigo')
         ];
     }
+
+// Relacion uno a muchos, una facultad tiene muchos graduados
+    public function graduados()
+    {
+        return $this->hasMany(Graduado::class);
+    }
 }
