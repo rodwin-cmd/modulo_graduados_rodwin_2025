@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fecha_respuesta');
             $table->string('tipo_encuesta');
             $table->string('medio_aplicacion');
-            $table->foreignId('graduado_id')->nullable()->change();
+            $table->foreignId('graduado_id')->nullable();
             $table->timestamps();
         });
     }

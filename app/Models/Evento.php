@@ -11,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Evento extends Model
 {
@@ -27,10 +28,10 @@ class Evento extends Model
     /**
      * Relación con el graduado (un evento pertenece a un graduado)
      */
-//    public function graduado(): BelongsTo
-//    {
-//        return $this->belongsTo(Graduado::class);
-//    }
+    public function graduado(): BelongsToMany
+    {
+        return $this->belongsToMany(Graduado::class);
+    }
 
 
 //    el metodo estatico getForm se utiliza reutilizar el codigo del formulario del resource

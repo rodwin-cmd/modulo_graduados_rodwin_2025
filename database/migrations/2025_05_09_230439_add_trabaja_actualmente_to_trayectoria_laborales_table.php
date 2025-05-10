@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('graduados', function (Blueprint $table) {
-            $table->string('avatar')->nullable();
+        Schema::table('trayectoria_laborales', function (Blueprint $table) {
+            $table->boolean('trabaja_actualmente')->default(false)->after('relacion_formacion');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('graduados', function (Blueprint $table) {
-            $table->dropColumn('avatar');
+        Schema::table('trayectoria_laborales', function (Blueprint $table) {
+            $table->dropColumn('trabaja_actualmente');
         });
     }
 };

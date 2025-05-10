@@ -19,4 +19,9 @@ class ViewGraduado extends ViewRecord
                 ->form(Graduado::getForm()),
         ];
     }
+
+
+
+
+
 }

@@ -3,8 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\GraduadoResource\Pages;
-use App\Filament\Resources\GraduadoResource\RelationManagers;
-use App\Filament\Resources\GraduadoResource\Widgets\NumberAllGraduateWidget;
+use App\Filament\Resources\GraduadoResource\RelationManagers\EncuestaRelationManager;
 use App\Models\Facultad;
 use App\Models\Graduado;
 use App\Models\ProgramaAcademico;
@@ -13,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
 
 
 class GraduadoResource extends Resource
@@ -35,16 +35,17 @@ class GraduadoResource extends Resource
 
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('avatar')
-                    ->label('Avatar')
-                    ->circular()
-                    ->getStateUsing(function ($record) {
-                        if ($record->avatar) {
-                            return asset('storage/' . $record->avatar);
-                        }
-                        // Fallback si no hay imagen
-                        return 'https://ui-avatars.com/api/?name=' . urlencode($record->nombre . ' ' . $record->apellidos) . '&background=random&color=fff';
-                    }),
+//                Tables\Columns\ImageColumn::make('avatar')
+//                    ->label('Avatar')
+//                    ->disk('public')
+//                    ->circular()
+//                    ->getStateUsing(function ($record) {
+//                        if ($record->avatar) {
+//                            return  Storage::url($record->avatar);
+//                        }
+//                        // Fallback si no hay imagen
+//                        return 'https://ui-avatars.com/api/?name=' . urlencode($record->nombre . ' ' . $record->apellidos) . '&background=random&color=fff';
+//                    }),
                 Tables\Columns\TextColumn::make('nombre')
                     ->sortable()
                     ->searchable(),
@@ -69,6 +70,11 @@ class GraduadoResource extends Resource
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('tiene_empleo')
                     ->label('¿Tiene empleo?'),
+
+                Tables\Columns\ToggleColumn::make('ultima_actualizacion')
+                    ->label('¿Información Actualizada?')
+                ,
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -128,7 +134,7 @@ class GraduadoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 
@@ -137,7 +143,7 @@ class GraduadoResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            NumberAllGraduateWidget::class,
+            //
         ];
     }
 

@@ -23,7 +23,7 @@ class EstudioFactory extends Factory
                 'Maestría',
                 'Doctorado',
             ]),
-            'programa' => $this->faker->words(3, true),
+            'programa_id' => $this->faker->words(3, true),
             'institucion' => $this->faker->company . ' Universidad',
             'fecha_inicio' => $fechaInicio->format('Y-m-d'),
             'fecha_fin' => $fechaFin->format('Y-m-d'),

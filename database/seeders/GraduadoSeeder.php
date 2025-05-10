@@ -13,7 +13,7 @@ class GraduadoSeeder extends Seeder
 {
     public function run(): void
     {
-        // Asegúrate de tener al menos 1 ciudad y 1 departamento creados
+        //
         $ciudadId = Ciudad::inRandomOrder()->first()?->id;
         $departamentoId = Departamento::inRandomOrder()->first()?->id;
 

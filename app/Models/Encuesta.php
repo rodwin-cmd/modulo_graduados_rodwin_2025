@@ -13,10 +13,9 @@ class Encuesta extends Model
     protected $fillable = [
         'nombre',
         'fecha_aplicacion',
-        'fecha_respuesta',
         'tipo_encuesta',
         'medio_aplicacion',
-
+        'url',
     ];
 
     /**
@@ -25,5 +24,21 @@ class Encuesta extends Model
     public function graduado(): BelongsTo
     {
         return $this->belongsTo(Graduado::class);
+    }
+
+    /**
+     * Evento que se ejecuta después de guardar una encuesta
+     * Cada vez que una encuesta es creada o actualizada, se ejecuta el evento saved.
+     * Se verifica si hay un graduado relacionado.
+     * Si lo hay, se actualiza su campo ultima_actualizacion con now() (la fecha y hora actual).
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (Encuesta $encuesta) {
+            if ($encuesta->graduado) {
+                $encuesta->graduado->ultima_actualizacion = now();
+                $encuesta->graduado->save();
+            }
+        });
     }
 }

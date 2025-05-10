@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -10,9 +11,11 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
@@ -36,11 +39,9 @@ class Graduado extends Model
         'ciudad_id',
         'departamento_id',
         'programa_academico_id',
+        'ultima_actualizacion',
         'avatar'
-
     ];
-
-
     /**
      * Relación con la ciudad (muchos graduados pertenecen a una ciudad)
      */
@@ -65,24 +66,24 @@ class Graduado extends Model
     }
 
     /**
-     * Relación con encuestas (un graduado puede tener muchas encuestas)
+     * Si un graduado puede tener muchas encuestas y una encuesta puede pertenecer a muchos graduados
      */
-    public function encuestas(): HasMany
+    public function encuestas(): BelongsToMany
     {
-        return $this->hasMany(Encuesta::class);
+        return $this->belongsToMany(Encuesta::class);
     }
 
     /**
      * Relación con eventos (un graduado puede estar relacionado a muchos eventos)
      */
-    public function eventos(): HasMany
+    public function eventos(): BelongsToMany
     {
-        return $this->hasMany(Evento::class);
+        return $this->belongsToMany(Evento::class);
     }
     /**
      * Relación con redes profesionales (un graduado puede tener muchas redes)
      */
-    public function redProfesionales(): HasMany
+    public function redprofesionales(): HasMany
     {
         return $this->hasMany(RedProfesional::class);
     }
@@ -124,18 +125,21 @@ class Graduado extends Model
                 ->tabs([
                     Tabs\Tab::make('Datos Personales')
                         ->icon('heroicon-o-user')
-                        ->columns(2)
+                        ->columns(3)
                         ->schema([
                             FileUpload::make('avatar')
+                                ->disk('public')
+                                ->directory('avatars')
                                 ->image()
-                                ->avatar(),
+                                ->avatar()
+                                ->previewable(true),
                             TextInput::make('nombre')
-                                ->label('Nombre del graduado')
+                                ->label('Nombre')
                                 ->required()
-                                ->maxLength(255),
+                                ->maxLength(100),
                             TextInput::make('apellidos')
                                 ->required()
-                                ->maxLength(255),
+                                ->maxLength(100),
                             Select::make('tipo_documento')
                                 ->label('Tipo de documento')
                                 ->options([
@@ -159,18 +163,21 @@ class Graduado extends Model
                                     'Otro' => 'Otro',
                                 ])
                                 ->required(),
+
                             DatePicker::make('fecha_nacimiento')
                                 ->label('Fecha de Nacimiento')
+                                ->helperText('Mes/Día/Año')
+
                                 ->required(),
                             TextInput::make('correo_personal')
                                 ->label('Correo Personal')
                                 ->required()
                                 ->email()
-                                ->maxLength(255),
+                                ->maxLength(100),
                             TextInput::make('correo_institucional')
                                 ->label('Correo Institucional')
                                 ->required()
-                                ->maxLength(255),
+                                ->maxLength(100),
                             TextInput::make('telefono')
                                 ->label('Teléfono')
                                 ->tel()
@@ -182,7 +189,8 @@ class Graduado extends Model
                                 ->maxLength(255),
                             Select::make('departamento_id')
                                 ->label('Departamento Residencia')
-                                ->relationship('departamento', 'nombre')
+                                ->relationship('departamento',
+                                    'nombre')
                                 ->required()
                                 ->reactive(),
                             Select::make('ciudad_id')
@@ -249,7 +257,10 @@ class Graduado extends Model
                                             ->label('Universidad o Centro Formativo'),
 
                                         DatePicker::make('fecha_inicio')->label('Fecha de Inicio'),
-                                        DatePicker::make('fecha_fin')->label('Fecha de Finalización'),
+                                        DatePicker::make('fecha_fin')
+                                            ->label('Fecha de Finalización')
+                                            ->after('fecha_inicio')
+                                        ,
                                     ])
                                     ->columns(2), // ajustar las columnas si es necesario
                             ]),
@@ -268,10 +279,48 @@ class Graduado extends Model
                                         TextInput::make('empresa')->required(),
                                         TextInput::make('direccion')->required(),
                                         TextInput::make('cargo')->required(),
-                                        TextInput::make('sector_productivo'),
-                                        TextInput::make('area_desempeno')
-                                            ->label('Area Desempeño')
+
+                                        Select::make('sector_productivo')
+                                            ->label('Actividad económica')
+                                            ->helperText('Seleccione el sector productivo')
+                                            ->options([
+                                                'Agricultura y Ganadería' =>'Agricultura y Ganadería',
+                                                'Minería y Energía'=> 'Minería y Energía',
+                                                'Industria y Manufactura' => 'Industria y Manufactura',
+                                                'Construcción' => 'Construcción',
+                                                'Comercio y Servicios' => 'Comercio y Servicios',
+                                                'Turismo y Hospitalidad' => 'Turismo y Hospitalidad',
+                                                'Educación y Cultura' => 'Educación y Cultura',
+                                                'Salud y Bienestar' => 'Salud y Bienestar',
+                                                'Finanzas y Seguros' => 'Finanzas y Seguros',
+                                                'Tecnología y Comunicación' => 'Tecnología y Comunicación',
+                                                'Investigación y Desarrollo' => 'Investigación y Desarrollo',
+                                                'Servicios Sociales y ONGs' => 'Servicios Sociales y ONGs',
+                                                'otro' => 'Otro',
+                                            ])
+                                        ->required(),
+
+                                        Select::make('area_desempeno')
+                                            ->label('Área')
+                                            ->helperText('Seleccione el área de la organización')
+                                            ->options([
+                                                'Atención al cliente' => 'Atención al cliente',
+                                                'Comercial' => 'Comercial',
+                                                'Compras' => 'Compras',
+                                                'Dirección' => 'Direccion',
+                                                'Finanzas y Contabilidad' => 'Finanzas y Contabilidad',
+                                                'Legal y seguros' => 'Legal y seguros',
+                                                'Logística y Operaciones' => 'Logística y Operaciones',
+                                                'Marketing' => 'Marketing',
+                                                'Producción' => 'Producción',
+                                                'Recursos Humanos' => 'Recursos Humanos',
+                                                'Sistemas de Gestión' => 'Sistemas de Gestión',
+                                                'Tecnología y Sistemas de Información' => 'Tecnología y Sistemas de Información',
+                                                'Ventas' => 'Ventas',
+                                            ])
                                             ->required(),
+
+
                                         Select::make('departamento_id')
                                             ->label('Departamento Residencia')
                                             ->relationship('departamento', 'nombre')
@@ -286,16 +335,31 @@ class Graduado extends Model
                                             ->required()
                                             ->disabled(fn (callable $get) => !$get('departamento_id'))
                                             ->reactive(),
-                                        DatePicker::make('fecha_inicio')->required(),
-                                        DatePicker::make('fecha_fin')->required(),
+
+                                        DatePicker::make('fecha_inicio')
+                                            ->required(),
                                         Toggle::make('relacion_formacion')
                                             ->label('Experiencia Relacionada con Perfil')
                                             ->required(),
+
+                                        Toggle::make('trabaja_actualmente')
+                                            ->label('Actualmente trabajando')
+                                            ->reactive()
+                                            ->afterStateUpdated(function (callable $set, $state) {
+                                                if ($state) {
+                                                    $set('fecha_fin', null);
+                                                }
+                                            }),
+                                        DatePicker::make('fecha_fin')
+                                            ->required()
+                                            ->disabled(fn (callable $get) => $get('trabaja_actualmente'))
+                                            ->required(fn (callable $get) => !$get('trabaja_actualmente'))
+                                            ->reactive(),
                                     ]),
                             ]),
 
                         //RED PROFESIONALES
-                        Tabs\Tab::make('Red profesional')
+                         Tabs\Tab::make('Red profesional')
                             ->icon('heroicon-o-globe-alt')
                             ->schema([
                                 Repeater::make('redprofesionales')
@@ -342,22 +406,44 @@ class Graduado extends Model
                                                 'Académico' => 'Académico',
                                                 'Empresarial' => 'Empresarial',
                                             ])
-                                            ->required(),
-                                        TextInput::make('titulo')->required(),
+                                            ,
+                                        TextInput::make('titulo'),
 
                                         Textarea::make('descripcion')->rows(3),
 
                                         TextInput::make('entidad_otorgante')
                                             ->label('Entidad Otorgante')
-                                            ->required(),
+                                            ,
 
                                         DatePicker::make('fecha')
                                             ->label('Fecha de Otorgamiento')
-                                            ->required(),
+                                            ,
 
                                     ])
                                     ->columns(2)
                                     ->label('Agregar reconocimiento')
+                        ]),
+                             //RECONOCIMIENTOS
+                    Tabs\Tab::make('Eventos')
+                        ->icon('heroicon-o-calendar')
+                        ->schema([
+                            Select::make('eventos')
+                                ->label('Eventos asistidos')
+                                ->multiple()
+                                ->relationship('eventos', 'nombre_evento')
+                                ->searchable()
+                                ->preload(),
+                        ]),
+                    //ENCUESTAS
+                    Tabs\Tab::make('Encuestas')
+                        ->icon('heroicon-o-clipboard-document-list')
+                        ->schema([
+                            Select::make('encuestas')
+                                ->label('Encuestas realizadas')
+                                ->multiple()
+                                ->relationship('encuestas', 'nombre')
+                                ->searchable()
+                                ->preload(),
                         ]),
             ]),
         ];

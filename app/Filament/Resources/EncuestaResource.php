@@ -35,14 +35,16 @@ class EncuestaResource extends Resource
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('fecha_aplicacion')
                     ->required(),
-                Forms\Components\DatePicker::make('fecha_respuesta')
-                    ->required(),
                 Forms\Components\TextInput::make('tipo_encuesta')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('medio_aplicacion')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('url')
+                ->label('URL de la encuesta')
+                ->url()                             // Validación para que sea una URL
+                ->nullable(),                      // Permitir que el campo sea opcional
                 Forms\Components\Hidden::make('graduado_id')
                     ->hidden(),
             ]);

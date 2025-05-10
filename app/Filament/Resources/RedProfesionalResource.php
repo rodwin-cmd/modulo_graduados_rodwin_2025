@@ -23,17 +23,16 @@ class RedProfesionalResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('red_social')
+                Forms\Components\TextInput::make('nombre_red')
+                    ->label('Red Social / Profesional')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('url_red_social')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('portafolio')
-                    ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('curriculum_url')
-                    ->required()
                     ->maxLength(255),
 
             ]);
