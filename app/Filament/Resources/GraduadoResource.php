@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GraduadoResource\Pages;
 use App\Filament\Resources\GraduadoResource\RelationManagers\EncuestaRelationManager;
+use App\Filament\Resources\GraduadoResource\Widgets\GraduadosPorFacultadChart;
 use App\Models\Facultad;
 use App\Models\Graduado;
 use App\Models\ProgramaAcademico;
@@ -35,17 +36,6 @@ class GraduadoResource extends Resource
 
         return $table
             ->columns([
-//                Tables\Columns\ImageColumn::make('avatar')
-//                    ->label('Avatar')
-//                    ->disk('public')
-//                    ->circular()
-//                    ->getStateUsing(function ($record) {
-//                        if ($record->avatar) {
-//                            return  Storage::url($record->avatar);
-//                        }
-//                        // Fallback si no hay imagen
-//                        return 'https://ui-avatars.com/api/?name=' . urlencode($record->nombre . ' ' . $record->apellidos) . '&background=random&color=fff';
-//                    }),
                 Tables\Columns\TextColumn::make('nombre')
                     ->sortable()
                     ->searchable(),
@@ -143,7 +133,7 @@ class GraduadoResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            //
+
         ];
     }
 

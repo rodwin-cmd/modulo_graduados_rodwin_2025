@@ -40,7 +40,8 @@ class Graduado extends Model
         'departamento_id',
         'programa_academico_id',
         'ultima_actualizacion',
-        'avatar'
+        'avatar',
+        'facultad_id',
     ];
     /**
      * Relación con la ciudad (muchos graduados pertenecen a una ciudad)
@@ -113,6 +114,7 @@ class Graduado extends Model
     {
         return $this->belongsTo(ProgramaAcademico::class, 'programa_academico_id');
     }
+
 
 
     // clase estática get form se utiliza para reutilizar el form en otras instacias
@@ -237,21 +239,19 @@ class Graduado extends Model
                                             ->label('Facultad')
                                             ->options(\App\Models\Facultad::pluck('nombre', 'id'))
                                             ->reactive()
-                                            ->afterStateUpdated(function (callable $set, $state) {
-                                                $programas = \App\Models\ProgramaAcademico::where('facultad_id', $state)->pluck('programa', 'id')->toArray();
-                                                $set('programa_id', null); // limpia el campo anterior
-                                                $set('programaOptions', $programas); // crea un estado temporal para las opciones
-                                            }),
+                                            ->required()
+                                            ->afterStateUpdated(fn (callable $set) => $set('programa_id', null)),
 
                                         Select::make('programa_id')
-                                            ->label('Programa Académico')
-                                            ->options(function (callable $get) {
-                                                $facultadId = $get('facultad_id');
-                                                if (!$facultadId) return [];
-                                                return \App\Models\ProgramaAcademico::where('facultad_id', $facultadId)
-                                                    ->pluck('programa', 'id');
-                                            })
-                                        ->reactive(),
+                                            ->label('Programa académico')
+                                            ->options(fn (callable $get) =>
+                                            \App\Models\ProgramaAcademico::where('facultad_id', $get('facultad_id'))->pluck('programa', 'id')
+                                            )
+                                            ->required()
+                                            ->searchable()
+                                            ->placeholder('Seleccione un programa')
+                                            ->visible(fn (callable $get) => $get('facultad_id')),
+
                                         TextInput::make('institucion')
                                             ->maxLength(255)
                                             ->label('Universidad o Centro Formativo'),

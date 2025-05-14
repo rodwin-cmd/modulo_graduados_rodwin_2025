@@ -35,6 +35,9 @@ class Estudio extends Model
     {
         return $this->belongsTo(Facultad::class);
     }
-
+    public function programa(): BelongsTo
+    {
+        return $this->belongsTo(ProgramaAcademico::class);
+    }
 
 }

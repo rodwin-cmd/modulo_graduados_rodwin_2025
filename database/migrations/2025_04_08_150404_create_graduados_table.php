@@ -29,6 +29,7 @@ return new class extends Migration
             $table->foreignId('departamento_id')->constrained();
             $table->string('nombre_contacto')->nullable();
             $table->string('telefono_contacto')->nullable();
+            $table->foreignId('facultad_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 

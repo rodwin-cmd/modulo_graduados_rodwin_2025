@@ -17,7 +17,11 @@ class Facultad extends Model
     {
         return $this->hasMany(ProgramaAcademico::class);
     }
-
+// Relacion uno a muchos, una facultad tiene muchos graduados
+    public function graduados():HasMany
+    {
+        return $this->hasMany(Graduado::class);
+    }
     public static function getForm() :array
     {
         return [
@@ -30,9 +34,5 @@ class Facultad extends Model
         ];
     }
 
-// Relacion uno a muchos, una facultad tiene muchos graduados
-    public function graduados()
-    {
-        return $this->hasMany(Graduado::class);
-    }
+
 }
