@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Filament\Widgets;
-use App\Models\Estudio;
-use App\Models\Facultad;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 
@@ -12,9 +10,7 @@ class ChartGraduados extends ChartWidget
 
     protected static ?string $heading = 'Graduados por Facultad';
 
-
-
-    protected static ?string $maxHeight ='400px';
+    protected static ?string $maxHeight ='600px';
 
     protected function getData(): array
     {
@@ -34,14 +30,11 @@ class ChartGraduados extends ChartWidget
                     'label' => 'Graduados',
                     'data' => $data,
                     'backgroundColor' => [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(201, 203, 207, 0.2)'
+                        '#4e73df', // color segmento
+                        '#1cc88a', // color segmento
+                        '#36b9cc', // color segmento
+                        '#FFD700',
                     ],
-                    'borderColor' => 'rgba(54, 162, 235, 1)',
                     'borderWidth' => 1,
                 ],
             ],

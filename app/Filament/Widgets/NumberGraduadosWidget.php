@@ -3,12 +3,12 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Graduado;
-use Filament\Support\Enums\IconPosition;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class NumberGraduadosWidget extends BaseWidget
 {
+
     protected function getStats(): array
     {
         $total = Graduado::count(); // recupera el total de graduados

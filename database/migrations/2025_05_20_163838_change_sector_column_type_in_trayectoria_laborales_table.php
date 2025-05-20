@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('encuestas', function (Blueprint $table) {
-            //$table->foreignId('graduado_id')->nullable()
-                //->constrained()
-                //->onDelete('set null');
+        Schema::table('trayectoria_laborales', function (Blueprint $table) {
+            $table->string('sector')->nullable()->change();
         });
     }
 
@@ -23,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('encuestas', function (Blueprint $table) {
-            $table->dropForeign(['graduado_id']);
-            $table->dropColumn('graduado_id');
+        Schema::table('trayectoria_laborales', function (Blueprint $table) {
+            $table->enum('sector', ['público', 'privado', 'mixto'])->nullable()->change();
         });
     }
 };

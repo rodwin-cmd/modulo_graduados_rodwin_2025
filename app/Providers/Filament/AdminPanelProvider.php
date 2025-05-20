@@ -3,7 +3,14 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\ChartGraduados;
+use App\Filament\Widgets\GraduadosConEventoChart;
+use App\Filament\Widgets\GraduadosGeneroChart;
+use App\Filament\Widgets\GraduadosResumen;
+use App\Filament\Widgets\GradudosPerfil;
+use App\Filament\Widgets\NivelSalarialChart;
 use App\Filament\Widgets\NumberGraduadosWidget;
+use App\Filament\Widgets\SectorChart;
+use App\Filament\Widgets\TipoContratoChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -55,6 +62,13 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 NumberGraduadosWidget::class,
                 ChartGraduados::class,
+                GradudosPerfil::class,
+                GraduadosGeneroChart::class,
+                GraduadosConEventoChart::class,
+                TipoContratoChart::class,
+                NivelSalarialChart::class,
+                SectorChart::class,
+
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->middleware([

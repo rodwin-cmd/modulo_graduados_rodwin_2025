@@ -3,9 +3,6 @@
 namespace App\Models;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -324,7 +321,35 @@ class Graduado extends Model
                                                 'Ventas' => 'Ventas',
                                             ])
                                             ->required(),
-
+                                        Select::make('tipo_contrato')
+                                            ->label('Tipo de contrato')
+                                            ->helperText('Seleccione el tipo de contrato')
+                                            ->options([
+                                                'Término Indefinido' => 'Término Indefinido',
+                                                'Término Fijo' => 'Término Fijo',
+                                                'Obra o Labor' => 'Obra o Labor',
+                                                'Contrato de Aprendizaje' => 'Contrato de Aprendizaje',
+                                                'Prestacion de Servicios' => 'Prestacion de Servicios',
+                                                'Otro' => 'Otro',
+                                            ])
+                                        ,
+                                        Select::make('nivel_salarial')
+                                            ->label('Rango salarial')
+                                            ->helperText('Seleccione el rango salarial')
+                                            ->options([
+                                                '1 SMMMLV' => '1 SMMMLV',
+                                                '2 SMMMLV' => '2 SMMMLV',
+                                                '3 SMMMLV' => '3 SMMMLV',
+                                                'Más de 4 SMMMLV' => 'Más de 4 SMMMLV',
+                                            ])
+                                        ,
+                                        Select::make('sector')
+                                            ->options([
+                                                'público' => 'Público',
+                                                'privado' => 'Privado',
+                                                'mixto' => 'Mixto',
+                                            ])
+                                            ->label('Sector'),
 
                                         Select::make('departamento_id')
                                             ->label('Departamento ')

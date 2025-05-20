@@ -21,6 +21,9 @@ class TrayectoriaLaboral extends Model
         'fecha_inicio',
         'fecha_fin',
         'relacion_formacion',
+        'tipo_contrato',
+        'nivel_salarial',
+        'sector',
 
     ];
 
