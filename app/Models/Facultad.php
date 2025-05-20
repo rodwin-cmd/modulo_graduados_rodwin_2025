@@ -13,7 +13,7 @@ class Facultad extends Model
     protected $table = 'facultades';
     protected $fillable = ['nombre', 'codigo'];
 
-    public function programas():HasMany
+    public function programa():HasMany
     {
         return $this->hasMany(ProgramaAcademico::class);
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -43,6 +44,9 @@ class Graduado extends Model
         'avatar',
         'facultad_id',
     ];
+
+    /******************************** Relaciones BD****************************************/
+
     /**
      * Relación con la ciudad (muchos graduados pertenecen a una ciudad)
      */
@@ -64,6 +68,14 @@ class Graduado extends Model
     public function estudios(): HasMany
     {
         return $this->hasMany(Estudio::class);
+    }
+
+    /**
+     * Mostrar solo un estudio, el mas reciente en la tabla principal
+     */
+    public function ultimoEstudio()
+    {
+        return $this->hasOne(Estudio::class)->latestOfMany();
     }
 
     /**
@@ -110,15 +122,17 @@ class Graduado extends Model
         return $this->belongsTo(Facultad::class); // Relación con Facultad
     }
 
-    public function programaAcademico(): BelongsTo
+    public function programa(): BelongsTo
     {
         return $this->belongsTo(ProgramaAcademico::class, 'programa_academico_id');
     }
 
+    /******************************** METODOS Y CLASES  FILAMENT****************************************/
 
 
-    // clase estática get form se utiliza para reutilizar el form en otras instacias
-    //Tabs es un componente de filament que organiza la información en listas visuales
+
+    // clase estática get form se utiliza para reutilizar el form en otras instacias.
+    //Tabs es un componente de filament que organiza la información en pestañas visuales
     public static function getForm(): array
     {
         return [
@@ -129,12 +143,6 @@ class Graduado extends Model
                         ->icon('heroicon-o-user')
                         ->columns(3)
                         ->schema([
-                            FileUpload::make('avatar')
-                                ->disk('public')
-                                ->directory('avatars')
-                                ->image()
-                                ->avatar()
-                                ->previewable(true),
                             TextInput::make('nombre')
                                 ->label('Nombre')
                                 ->required()
@@ -169,7 +177,6 @@ class Graduado extends Model
                             DatePicker::make('fecha_nacimiento')
                                 ->label('Fecha de Nacimiento')
                                 ->helperText('Mes/Día/Año')
-
                                 ->required(),
                             TextInput::make('correo_personal')
                                 ->label('Correo Personal')
@@ -251,16 +258,14 @@ class Graduado extends Model
                                             ->searchable()
                                             ->placeholder('Seleccione un programa')
                                             ->visible(fn (callable $get) => $get('facultad_id')),
-
                                         TextInput::make('institucion')
-                                            ->maxLength(255)
-                                            ->label('Universidad o Centro Formativo'),
+                                            ->label('Institución')
+                                            ->required()
+                                            ->maxLength(100),
+                                        DatePicker::make('fecha_inicio')->label('Fecha Inicio'),
+                                        DatePicker::make('fecha_fin')->label('Fecha Fin')
+                                        ->after('fecha_inicio'),
 
-                                        DatePicker::make('fecha_inicio')->label('Fecha de Inicio'),
-                                        DatePicker::make('fecha_fin')
-                                            ->label('Fecha de Finalización')
-                                            ->after('fecha_inicio')
-                                        ,
                                     ])
                                     ->columns(2), // ajustar las columnas si es necesario
                             ]),
@@ -322,12 +327,12 @@ class Graduado extends Model
 
 
                                         Select::make('departamento_id')
-                                            ->label('Departamento Residencia')
+                                            ->label('Departamento ')
                                             ->relationship('departamento', 'nombre')
                                             ->reactive()
                                             ->afterStateUpdated(fn (callable $set) => $set('ciudad_id', null)),
                                         Select::make('ciudad_id')
-                                            ->label('Ciudad Residencia')
+                                            ->label('Ciudad')
                                             ->options(fn (callable $get) =>
                                             \App\Models\Ciudad::where('departamento_id', $get('departamento_id'))
                                                 ->pluck('nombre', 'id')

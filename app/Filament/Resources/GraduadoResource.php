@@ -13,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -25,16 +26,24 @@ class GraduadoResource extends Resource
     // Navigationgroup define el orden que aparece el recurso en el panel
     protected static ?string $navigationGroup = 'Panel Graduados';
 
+
+    //GetForm es una clase tipo formulario en el cual estan los datos del form, separados del form table
     public static function form(Form $form): Form
     {
         return $form
             ->schema(Graduado::getForm());
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Graduado::count();
+    }
+
     public static function table(Table $table): Table
     {
 
         return $table
+            ->persistFiltersInSession()
             ->columns([
                 Tables\Columns\TextColumn::make('nombre')
                     ->sortable()
@@ -52,8 +61,14 @@ class GraduadoResource extends Resource
                 Tables\Columns\TextColumn::make('correo_personal')
                     ->label('Correo Personal')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('correo_institucional')
-                    ->label('Correo Institucional')
+                Tables\Columns\TextColumn::make('ultimoEstudio.facultad.nombre')
+                    ->label('Facultad')
+                    ->wrap()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('ultimoEstudio.nivel_estudios')
+                    ->label('Programa Académico')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('telefono')
                     ->label('Teléfono')
@@ -64,7 +79,6 @@ class GraduadoResource extends Resource
                 Tables\Columns\ToggleColumn::make('ultima_actualizacion')
                     ->label('¿Información Actualizada?')
                 ,
-
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -77,34 +91,7 @@ class GraduadoResource extends Resource
 
             //filters se define los filtros que se muestran en la tabla
             ->filters([
-                Tables\Filters\Filter::make('Facultad y Programa')
-                    ->form([
-                        Select::make('facultad_id')
-                            ->label('Facultad')
-                            ->options(Facultad::pluck('nombre', 'id')->toArray())
-                            ->reactive(), // para actualizar dinámicamente
 
-                        Select::make('programa_id')
-                            ->label('Programa Académico')
-                            ->options(function (callable $get) {
-                                $facultadId = $get('facultad_id');
-                                if (!$facultadId) return [];
-
-                                return ProgramaAcademico::where('facultad_id', $facultadId)
-                                    ->pluck('nombre', 'id');
-                            }),
-                    ])
-                    ->query(function ($query, array $data) {
-                        if ($data['programa_id']) {
-                            $query->where('programa_id', $data['programa_id']);
-                        }
-                        if ($data['facultad_id']) {
-                            // Usamos la relación para filtrar por facultad
-                            $query->whereHas('facultad', function ($q) use ($data) {
-                                $q->where('id', $data['facultad_id']);
-                            });
-                        }
-                    }),
 
             ])
             ->actions([
@@ -116,10 +103,12 @@ class GraduadoResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+
             ]);
+
+
+
     }
-
-
 
     public static function getRelations(): array
     {
